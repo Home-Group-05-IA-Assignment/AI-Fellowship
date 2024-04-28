@@ -1,48 +1,52 @@
-from src.ai_model import EmotionPredictor
+from flask import Flask, request, jsonify
+from ai_model import EmotionPredictor
+from input_handler import TextHandler
+from text_preprocessor import TextPreprocessor
 
-texts = [
-    "I feel so alone even when I'm surrounded by people.",
-    "The news of his passing brought tears to my eyes.",
-    "Everything feels gray and bleak these days.",
-    "Losing my job has left me feeling completely hopeless.",
-    "It's hard to say goodbye to someone you love.",
-    "Winning the competition filled me with an indescribable happiness.",
-    "Seeing her smile is the best part of my day.",
-    "I couldn't stop laughing at the joke he told.",
-    "The sun is shining, and I feel fantastic!",
-    "Hearing the good news made my heart leap with joy.",
-    "Every moment with you is a treasure I hold dear.",
-    "I feel a warmth in my heart whenever I think of you.",
-    "Meeting you was the best thing that ever happened to me.",
-    "Your love gives me the strength to face any challenge.",
-    "Holding your hand feels like coming home.",
-    "Their unfair decision made my blood boil with anger.",
-    "I can't believe you would betray my trust like this!",
-    "Every word he said was like adding fuel to the fire.",
-    "I'm tired of being ignored and taken for granted.",
-    "Canceling our plans at the last minute really infuriated me.",
-    "Walking alone at night sends shivers down my spine.",
-    "The thought of losing you terrifies me more than anything.",
-    "Hearing those strange noises made my heart race.",
-    "I'm petrified of speaking in front of large crowds.",
-    "The uncertainty of the future fills me with dread.",
-    "I was taken aback by the unexpected gift.",
-    "Seeing them jump out of the dark gave me quite a shock.",
-    "The plot twist at the end of the movie was completely unforeseen.",
-    "Getting the promotion was a pleasant surprise I hadn't anticipated.",
-    "Their sudden appearance at the party was a total surprise."
-]
+# Initialize the Flask application
+app = Flask(__name__)
 
-"sadness (0), joy (1), love (2), anger (3), fear (4), and surprise (5)"
+# Initialize the emotion prediction model, input handler, and text preprocessor
+emotion_predictor = EmotionPredictor(model_id="Valwolfor/distilbert_emotions_fellowship")
+input_handler = TextHandler()
+text_processor = TextPreprocessor()
 
-if __name__ == "__main__":
-    model_id = "Valwolfor/distilbert_emotions_fellowship"
-    emotion_predictor = EmotionPredictor(model_id=model_id)
 
-    # Sample text to classify
-    sample_text = "The sun is shining, and I feel fantastic!"
+@app.route('/predict', methods=['POST'])
+def predict():
+    """
+    Predicts the emotion from the input text.
+    Note: Language detection and translation (e.g., Spanish to English) should be handled separately.
 
-    # Predict the emotion
-    predicted_class_id = emotion_predictor.predict_emotion(sample_text)
+    Expected JSON format in request:
+    {
+        "text": "<input_text_here>"
+    }
 
-    print("Predicted class ID:", predicted_class_id)
+    Response JSON format:
+    {
+        "emotion": "<predicted_emotion>",
+        "description": "<description_of_emotion>"
+    }
+
+    Returns:
+        - 400 Bad Request if "text" is missing from the request.
+        - JSON response with predicted emotion and description.
+    """
+
+    if not request.json or 'text' not in request.json:
+        return jsonify({'error': 'Invalid request, "text" field is expected.'}), 400
+
+    text = request.json['text']
+    # Language detection and optional translation (implementation needed)
+
+    processed_text = text_processor.preprocess_text(text)
+
+    prediction = emotion_predictor.predict_emotion(processed_text)
+    emotion, description = input_handler.get_emotion_description(prediction)
+
+    return jsonify({'emotion': emotion, 'description': description})
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
