@@ -4,7 +4,10 @@
 IA-Fellowship is an innovative application designed to accurately recognize emotions and stress levels embedded within textual data. By harnessing cutting-edge natural language processing (NLP) and machine learning techniques, it facilitates the identification and analysis of various human emotional states conveyed through text.
 ## Environment Setup
 
-The model was trained with this [GoogleColab](https://colab.research.google.com/drive/1JS5HWG9Pld47A9MGu0onvGb0SsHpfM1O?usp=sharing&authuser=1#scrollTo=KYkqxFLPSc-u), here is the model in [HuggingFace](https://huggingface.co/Valwolfor/distilbert_emotions_fellowship/)
+The first model (BERT), was trained in this [GoogleColab](https://colab.research.google.com/drive/1JS5HWG9Pld47A9MGu0onvGb0SsHpfM1O?usp=sharing&authuser=1#scrollTo=KYkqxFLPSc-u), and then was also uploaded to this [HuggingFace](https://huggingface.co/Valwolfor/distilbert_emotions_fellowship/)
+
+The second model (Logistic Regression) was also trained in a Jupyter Notebook called EmotionsModel. You can find its .pkl in the ./clean-data folder.
+
 To ensure a consistent and isolated development environment for this project, ia-venv (a Python virtual environment) is utilized. Follow these steps to set up your environment:
 
 
@@ -23,6 +26,7 @@ source ia-venv/bin/activate
 
 # Install the required dependencies
 pip install -r requirements.txt
+pip install -r requirementsLog.txt
 ```
 
 
@@ -45,7 +49,6 @@ The initial stage of the project involves rigorous data cleaning and preprocessi
 - **hg-05-ia.ipynb**: A Jupyter notebook that outlines the data cleaning process, available for review on Google Colab.
 - **text.csv**: Raw textual data before cleaning.
 - You could use the *cleaned_data* when you are training the model. 
-
 ## The API
 
 The core of this application is exposed through a Flask-based API, which serves endpoints for emotion prediction. To utilize the API:
