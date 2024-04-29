@@ -28,7 +28,7 @@ class EmotionPredictor:
             Predicts the emotion of a given piece of text. Returns the class ID of the predicted emotion.
     """
 
-    def __init__(self, model_id):
+    def __init__(self, model_id="Valwolfor/distilbert_emotions_fellowship"):
         """
         Initializes the EmotionPredictor instance by loading the model and tokenizer from
         the specified Hugging Face model repository identifier (model_id). It also sets up the

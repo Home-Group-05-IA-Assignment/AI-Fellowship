@@ -39,7 +39,7 @@ def predict():
 
     text = request.json['text']
     # Language detection and optional translation (implementation needed)
-
+    # TODO: fix input es or en
     processed_text = text_processor.preprocess_text(text)
 
     prediction = emotion_predictor.predict_emotion(processed_text)
