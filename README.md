@@ -63,9 +63,9 @@ Analyzed emotions and their descriptions are returned in JSON format.
 
 ## Project Structure Overview
 
-    The EmotionPredictor class handles the prediction logic using a pre-trained BERT model, focusing on emotion classification.
-    TextHandler is responsible for language detection, translation (placeholder), and providing human-readable descriptions of the predicted emotions.
-    TextPreprocessor performs initial text cleaning, including expanding abbreviations, removing stopwords, and stemming.
+The EmotionPredictor class handles the prediction logic using a pre-trained BERT model, focusing on emotion classification.
+TextHandler is responsible for language detection, translation (placeholder), and providing human-readable descriptions of the predicted emotions.
+TextPreprocessor performs initial text cleaning, including expanding abbreviations, removing stopwords, and stemming.
 
 Final Notes
 
