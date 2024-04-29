@@ -63,12 +63,8 @@ Analyzed emotions and their descriptions are returned in JSON format.
 
 ## Project Structure Overview
 
-The EmotionPredictor class handles the prediction logic using a pre-trained BERT model, focusing on emotion classification.
-TextHandler is responsible for language detection, translation (placeholder), and providing human-readable descriptions of the predicted emotions.
-TextPreprocessor performs initial text cleaning, including expanding abbreviations, removing stopwords, and stemming.
+The EmotionPredictor class handles the prediction logic using two models: a pre-trained BERT model and a logistic regression model. The BERT model focuses on emotion classification, while the logistic regression model returns the probabilities of each emotion in a given text. TextHandler is responsible for language detection, translation (placeholder), and providing human-readable descriptions of the predicted emotions. TextPreprocessor performs initial text cleaning, including expanding abbreviations, removing stopwords, and stemming.
 
-Final Notes
+### Final Notes
 
-This application, part of the broader IA-Fellowship initiative, aims to push the boundaries of emotion and stress analysis
-using AI. Ongoing development and improvements are focused on enhancing accuracy, expanding language support, and refining
-the model for better real-world applicability.
+This application, part of the broader IA-Fellowship initiative, aims to push the boundaries of emotion and stress analysis using AI. Ongoing development and improvements are focused on enhancing accuracy, expanding language support, and refining the models for better real-world applicability. Having both models, BERT and logistic regression, offers complementary benefits: while BERT excels at capturing complex linguistic patterns, logistic regression provides interpretable probability scores for each emotion, enhancing the overall robustness and interpretability of the emotion classification system.
