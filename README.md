@@ -47,7 +47,9 @@ The initial stage of the project involves rigorous data cleaning and preprocessi
 
 - **abbreviations.json**: This JSON file contains mappings from common English abbreviations to their expanded forms, used in text preprocessing to enhance clarity.
 - **hg-05-ia.ipynb**: A Jupyter notebook that outlines the data cleaning process, available for review on Google Colab.
-- **text.csv**: Raw textual data before cleaning.
+- **text.csv**: Raw  dataset before cleaning.
+- **EmotionsModel.ipynb**: A Jupyter notebook that outlines the preprocessing of the data and the training of the LogisticModel
+- **LogisticRegModel.pkl**: the model trained and ready to be used by the final user
 - You could use the *cleaned_data* when you are training the model. 
 ## The API
 
