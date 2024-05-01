@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
-from ai_model import EmotionPredictor
-from input_handler import TextHandler
-from text_preprocessor import TextPreprocessor
+from src.models.bert_model import EmotionPredictor
+from src.utils.input_handler import TextHandler
+from src.utils.text_preprocessor import TextPreprocessor
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -10,6 +10,7 @@ app = Flask(__name__)
 emotion_predictor = EmotionPredictor(model_id="Valwolfor/distilbert_emotions_fellowship")
 input_handler = TextHandler()
 text_processor = TextPreprocessor()
+
 
 
 @app.route('/predict', methods=['POST'])

@@ -11,7 +11,7 @@ from text_preprocessorLog import readFromTxt
 def characteristicsExtraction(X_val):
     # Characteristics Extraction. 
     #We use the pretrained model of tfidf_vectorizer
-    with open('./../ia-model/clean-data/tfidf_vectorizer.pkl', 'rb') as f:  
+    with open('model-repository/tfidf_vectorizer.pkl', 'rb') as f:
         try:
             tfidf_vectorizer  = pickle.load(f)
             X_val  = pd.DataFrame(tfidf_vectorizer.transform(X_val).toarray())
@@ -22,7 +22,7 @@ def characteristicsExtraction(X_val):
             print(f'Found: {UnicodeDecodeError}')
 
 def LogisticRegressionModel(dataframe):
-    with open('./../ia-model/clean-data/logisticRegModel.pkl', 'rb') as f:
+    with open('model-repository/logisticRegModel.pkl', 'rb') as f:
         try:
             emotions3_model = pickle.load(f)
             X_test = characteristicsExtraction(dataframe['t_text'])
