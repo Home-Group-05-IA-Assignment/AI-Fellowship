@@ -60,11 +60,11 @@ def getResults(prediction,X_val,modelName):
 
 def run():
     df = readFromTxt('./../test.txt')
-    print(df.head(len(df)))
-    df = tokenizeDF(df)
+    #print(df.head(len(df)))
+    #df = tokenizeDF(df)
     print('*******')
-    print(df.head(len(df)))
-    print('--------------')
+    #print(df.head(len(df)))
+    #print('--------------')
     #print('chars')
     print(LogisticRegressionModel(df).head(6))
 
