@@ -38,6 +38,21 @@ def readFromTxt(route):
     
     return df_result
 
+def readFromStr(s):
+    df_result = pd.DataFrame(columns=('text', 't_text'))
+    text = []
+    subtext = ""
+    #Separate into substrings when it finds a , or . or \n
+    #then add it to the df
+    for word in s:
+        if word != "," and word != "." and word != "\n":
+            subtext+=word
+        else:
+            text.append(subtext)
+            subtext = "" 
+    df_result['text'] = text
+    return df_result
+
 def tokenizeDF(dataframe):
     #drop NaN values
     dataframe = dataframe.dropna(subset=["text"])

@@ -7,6 +7,7 @@ from collections import defaultdict
 import pickle
 from text_preprocessorLog import tokenizeDF
 from text_preprocessorLog import readFromTxt
+from text_preprocessorLog import readFromStr
 
 def characteristicsExtraction(X_val):
     # Characteristics Extraction. 
@@ -59,12 +60,13 @@ def getResults(prediction,X_val,modelName):
   return result
 
 def run():
-    df = readFromTxt('./../test.txt')
-    #print(df.head(len(df)))
+    #df = readFromTxt('./../test.txt')
+    df = readFromStr("Crazy, that beautiful girl with her madness illuminates the world, capable, she is so strong, that even having gone through many things in life, really difficult tests, she continues to endure with her sad eyes, with her firm mouth, ready to tell you all the truths, no, she will not shut up, even if she has everything to lose, she will never set aside her truth, her convictions, her strength, and she will fight, against the world with all her being, she will dig her nails into you, she will confront you without retreating, even though she will never scream, because she says that is vulgar, and she can be anything but vulgar. Crazy, you might think she's crazy, because she lives in her own reality.")
+    print(df.head(len(df)))
     df = tokenizeDF(df)
-    #print('*******')
-    #print(df.head(len(df)))
-    #print('--------------')
+    print('*******')
+    print(df.head(len(df)))
+    print('--------------')
     #print('chars')
     print(LogisticRegressionModel(df).head(6))
 
