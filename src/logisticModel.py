@@ -36,7 +36,7 @@ def LogisticRegressionModel(dataframe):
 
 
 
-def getResults(X_val,modelName):
+def getResults(prediction,X_val,modelName):
   emotion_classification = {0:'Sadness',1:'Joy',2:'Love',3:'Anger',4:'Fear',5:'Surprise'}
   # Create a dict to save average probabilities for each emotion
   emotion_probabilities = defaultdict(list)
@@ -60,14 +60,13 @@ def getResults(X_val,modelName):
 
 def run():
     df = readFromTxt('./../test.txt')
-    print(df.head(11))
-    print('--------------')
+    print(df.head(len(df)))
     df = tokenizeDF(df)
-    print(df.head(11))
+    print('*******')
+    print(df.head(len(df)))
     print('--------------')
-    #df.iloc[:][:].map(lambda x:print(x))
-    print('chars')
-    #print(LogisticRegressionModel(df).head())
+    #print('chars')
+    print(LogisticRegressionModel(df).head(6))
 
 
 

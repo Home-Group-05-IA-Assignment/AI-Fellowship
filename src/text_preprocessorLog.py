@@ -25,14 +25,13 @@ def readFromTxt(route):
     file.close()
     #creating a dataframe
     text = []
-    df_result = pd.DataFrame(columns=('text', 'label'))
+    df_result = pd.DataFrame(columns=('text', 't_text'))
     # remove /n at the end of each line
     for line in lines:
          line = line.strip()
-         print(f'jeje: {line}')
          pattern = r"\s+" 
          filtered_line = re.sub(pattern, " ", line)
-         if filtered_line !="" or filtered_line!=" ":
+         if filtered_line !="" or filtered_line!=" " and(len(filtered_line)!=0):
             text.append(filtered_line)
     #Assigning rows to the dataframe
     df_result['text'] = text     
@@ -64,6 +63,9 @@ def tokenizeDF(dataframe):
     #Lemmatization
     lem = WordNetLemmatizer()
     dataframe["t_text"] = dataframe["t_text"].apply(lambda words:" ".join([lem.lemmatize(word,pos="v") for word in words]))
+
+    #Finally delete rows with empty data
+    dataframe.drop(dataframe.loc[dataframe["t_text"]==""].index,inplace=True)
     return dataframe
     
 
