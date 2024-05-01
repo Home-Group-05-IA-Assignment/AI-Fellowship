@@ -27,9 +27,7 @@ def LogisticRegressionModel(dataframe):
         try:
             emotions3_model = pickle.load(f)
             X_test = characteristicsExtraction(dataframe['t_text'])
-            print('--------')
-            y_test = emotions3_model.predict(X_test)
-            return getResults(prediction=y_test,X_val=X_test,modelName=emotions3_model)
+            return getResults(X_val=X_test,modelName=emotions3_model)
         except UnicodeDecodeError:
         # Try other encodings (e.g., 'latin-1') if utf-8 fails
             print(f'Found: {UnicodeDecodeError}')
@@ -37,13 +35,14 @@ def LogisticRegressionModel(dataframe):
 
 
 
-def getResults(prediction,X_val,modelName):
+def getResults(X_val,modelName):
   emotion_classification = {0:'Sadness',1:'Joy',2:'Love',3:'Anger',4:'Fear',5:'Surprise'}
   # Create a dict to save average probabilities for each emotion
   emotion_probabilities = defaultdict(list)
   predicted_probabilities = modelName.predict_proba(X_val)
 
 # Add probabilities for each emotion
+ 
   for probabilities in predicted_probabilities:
       for emotion, probability in zip(modelName.classes_, probabilities):
           emotion_probabilities[emotion].append(probability)
@@ -59,18 +58,36 @@ def getResults(prediction,X_val,modelName):
   result = pd.DataFrame.from_dict(average_emotion_probabilities, orient='index', columns=['Average Probability'])
   return result
 
-def run():
-    #df = readFromTxt('./../test.txt')
-    df = readFromStr("Crazy, that beautiful girl with her madness illuminates the world, capable, she is so strong, that even having gone through many things in life, really difficult tests, she continues to endure with her sad eyes, with her firm mouth, ready to tell you all the truths, no, she will not shut up, even if she has everything to lose, she will never set aside her truth, her convictions, her strength, and she will fight, against the world with all her being, she will dig her nails into you, she will confront you without retreating, even though she will never scream, because she says that is vulgar, and she can be anything but vulgar. Crazy, you might think she's crazy, because she lives in her own reality.")
-    print(df.head(len(df)))
+def executeTxt(file):
+    df = readFromTxt(file)
     df = tokenizeDF(df)
-    print('*******')
-    print(df.head(len(df)))
-    print('--------------')
-    #print('chars')
-    print(LogisticRegressionModel(df).head(6))
+    return LogisticRegressionModel(df)
 
+
+def executeStr(s):
+    df = readFromStr(s)
+    df = tokenizeDF(df)
+    return LogisticRegressionModel(df)
 
 
 if __name__ == '__main__':
-    run()
+    print(executeStr("""Crazy, that beautiful girl with her madness illuminates the world,
+capable,
+ she is so strong,
+  that even having gone through many things in life,
+really difficult tests, 
+she continues to endure with her sad eyes,
+ with her firm mouth,
+ready to tell you all the truths,
+ no,
+  she will not shut up, even if she has everything to lose,
+she will never set aside her truth,
+ her convictions, her strength, and she will fight, 
+against the world with all her being, 
+she will dig her nails into you
+, she will confront you without retreating,
+ even though she will never scream,
+because she says that is vulgar,
+and she can be anything but vulgar.
+Crazy, you might think she's crazy,
+because she lives in her own reality.""").head(6))
