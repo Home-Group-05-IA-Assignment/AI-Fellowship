@@ -13,10 +13,6 @@ from nltk.stem import WordNetLemmatizer
 from spacy.lang.en.stop_words import STOP_WORDS
 from wordcloud import STOPWORDS
 
-import pickle
-#nltk.download('punkt')
-#nltk.download('wordnet')
-#nltk.download('stopwords')
 
 def readFromTxt(route):
     #first u have to open  the file and seperate every line like below:
@@ -84,14 +80,3 @@ def tokenizeDF(dataframe):
     return dataframe
     
 
-"""
-def run():
-    df = readFromTxt('./../test.txt')
-    #print(df.head())
-    #print('tokenize')
-    df = tokenizeDF(df)
-   #print(df.head())
-
-if '__main__' == __name__:
-    run()
-"""
