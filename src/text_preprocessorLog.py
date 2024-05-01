@@ -23,16 +23,25 @@ def readFromTxt(route):
     file = open(route, "r")
     lines = file.readlines()
     file.close()
-    # remove /n at the end of each line
-    for index, line in enumerate(lines):
-      lines[index] = line.strip()
     #creating a dataframe
+    text = []
     df_result = pd.DataFrame(columns=('text', 'label'))
+    # remove /n at the end of each line
+    for line in lines:
+         line = line.strip()
+         print(f'jeje: {line}')
+         pattern = r"\s+" 
+         filtered_line = re.sub(pattern, " ", line)
+         if filtered_line !="" or filtered_line!=" ":
+            text.append(filtered_line)
     #Assigning rows to the dataframe
-    df_result['text'] = lines
+    df_result['text'] = text     
+    
     return df_result
 
 def tokenizeDF(dataframe):
+    #drop NaN values
+    dataframe = dataframe.dropna(subset=["text"])
     # lowercase, digits and extra-spaces
     dataframe["t_text"] = dataframe["text"].str.lower()
     dataframe["t_text"] = dataframe["t_text"].apply(lambda x: re.sub(r"\d+","",x))
@@ -49,8 +58,7 @@ def tokenizeDF(dataframe):
     #Stop words
     stop_words = stopwords.words("english")
     com_stop_words = stop_words + list(STOP_WORDS) + list(STOPWORDS)
-    print(len(com_stop_words))
-    print(len(set(com_stop_words)))
+    
 
     dataframe["t_text"] = dataframe["t_text"].apply(lambda words:[word for word in words if word not in com_stop_words])
     #Lemmatization
@@ -59,13 +67,14 @@ def tokenizeDF(dataframe):
     return dataframe
     
 
-
+"""
 def run():
     df = readFromTxt('./../test.txt')
-    print(df.head())
-    print('tokenize')
+    #print(df.head())
+    #print('tokenize')
     df = tokenizeDF(df)
-    print(df.head())
+   #print(df.head())
 
 if '__main__' == __name__:
     run()
+"""
