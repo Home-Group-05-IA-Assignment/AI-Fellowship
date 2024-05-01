@@ -1,9 +1,6 @@
 import pandas as pd
 import re
-
 from string import punctuation
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords

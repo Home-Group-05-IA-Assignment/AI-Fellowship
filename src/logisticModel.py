@@ -1,8 +1,4 @@
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import accuracy_score,confusion_matrix,classification_report
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.linear_model import LogisticRegression
 from collections import defaultdict
 import pickle
 from text_preprocessorLog import tokenizeDF
