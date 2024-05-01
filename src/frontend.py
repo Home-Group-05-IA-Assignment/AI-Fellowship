@@ -1,5 +1,5 @@
 import streamlit as st
-from backend import *
+import backend as bk
 
 st.session_state['send_button_disabled'] = True
 
@@ -12,7 +12,7 @@ def main():
     global firstIn
     global send_button_disabled
     emotion = ""
-    parameters = "Toma el papel de un psicologo para dar recomendaciones de articulos y tecnicas para controlar las emociones, ademas de dar consejos y escuchar al usuario. Segun el siguiente texto que recomendaciones harias: "
+    parameters = "Toma el papel de un psicologo para dar recomendaciones de articulos y tecnicas para controlar las emociones, especialmente invitando a la persona a hacer actividades offline, ademas de dar consejos y escuchar al usuario. Segun el siguiente texto que recomendaciones harias: "
 
     tab1, tab2 = st.tabs(["Explora tus emociones", "¿Quieres ayuda?"])
 
@@ -26,7 +26,7 @@ def main():
             firstIn = True
 
     with tab2:
-        chat = start_chat()
+        chat = bk.start_chat()
         st.warning("Si sales de la pestaña se borrara la conversación")
 
         st.write("¡Hola! Soy Gemini, tu asistente personal para controlar tus emociones. ¿En qué puedo ayudarte hoy?")
@@ -34,13 +34,13 @@ def main():
         message = st.text_area("Escribe aquí tu mensaje para Gemini")
 
         if st.button("Enviar"):
-            response = send_message(message, chat)
+            response = bk.send_message(message, chat)
             st.write(response)
 
         if firstIn:
             firstIn = False
             firstChat = parameters + emotion
-            response = send_message(firstChat, chat)
+            response = bk.send_message(firstChat, chat)
             st.write(response)
 
 
