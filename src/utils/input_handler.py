@@ -3,6 +3,8 @@ import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 
+from src.services.gemini_service import ChatService
+
 
 class TextHandler:
     """
@@ -45,6 +47,7 @@ class TextHandler:
         load_dotenv()
         self.GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
         self.gemini_model = genai.GenerativeModel('gemini-pro')
+        self.chat = ChatService()
 
     def translate_from_spanish(self, text):
         """
@@ -57,11 +60,13 @@ class TextHandler:
         Returns:
             str: Translated text in English.
         """
-        chat = self.gemini_model.start_chat(history=[])
+        chat_started = self.chat.start_chat()
+
         parameter = "Translate this text to English without adding anything else: "
         # Here, assume `send_message` effectively translates the input text.
-        response = chat.send_message(parameter + text)
-        return response.text
+        response = self.chat.send_message(parameter, text, chat_started)
+
+        return response
 
     def detect_language(self, text):
         """

@@ -10,8 +10,6 @@ st.title("¿Sabes como controlar tus emociones? El primer paso es identificarlas
 
 firstIn = False
 send_button_disabled = True
-# Aquí, configura tus modelos o cualquier setup inicial necesario
-
 
 model_options = {
     "Logistic Regression": 0,
