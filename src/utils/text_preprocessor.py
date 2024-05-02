@@ -2,7 +2,9 @@ import re
 import emoji
 import pandas as pd
 from nltk.stem import PorterStemmer
+from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 
 
 class TextPreprocessor:
@@ -38,8 +40,9 @@ class TextPreprocessor:
         """
         self.stop_words = set(stopwords.words('english'))
         self.ps = PorterStemmer()
+        self.lemmatizer = WordNetLemmatizer()
 
-    def preprocess_text(self, text):
+    def preprocess_text(self, text, is_logistic=False):
         """
         Conducts a series of preprocessing steps on the input text including normalization,
         cleaning, stopping, stemming, and emoji to text conversion. Also expands chat
@@ -50,19 +53,28 @@ class TextPreprocessor:
 
         Returns:
             str: The preprocessed text.
+            :param is_logistic:
         """
         # Initial preprocessing step to expand chat abbreviations
         text = self.replace_chat_words(text)
+
         # Converting to lowercase, removing extra spaces, symbols, and converting emojis
         text = text.lower()
         text = re.sub(r'\s+', ' ', text)
         text = re.sub(r'[^\w\s]', '', text)
         text = emoji.demojize(text)
+
         # Removing stop words and stemming the remainders
-        text = " ".join([self.ps.stem(word) for word in text.split() if word not in self.stop_words])
+        if is_logistic:
+            tokens = word_tokenize(text)
+            filtered_tokens = [word for word in tokens if word not in self.stop_words]
+            text = [self.lemmatizer.lemmatize(word) for word in filtered_tokens]
+        else:
+            text = " ".join([self.ps.stem(word) for word in text.split() if word not in self.stop_words])
         return text
 
-    def replace_chat_words(self, text):
+    @staticmethod
+    def replace_chat_words(text):
         """
         Expands abbreviations commonly found in chat messages with their full forms as per
         a predefined abbreviations.json file. This process is case-insensitive.

@@ -1,8 +1,11 @@
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
+from torch.nn.functional import softmax
+
+from src.models.emotion_model import IEmotionPredictor
 
 
-class EmotionPredictor:
+class EmotionPredictor(IEmotionPredictor):
     """
     A class designed to predict emotions from textual input using pre-trained models
     from the Hugging Face Transformers library.
@@ -52,7 +55,8 @@ class EmotionPredictor:
             text (str): The textual input for which the emotion is to be predicted.
 
         Returns:
-            int: The class ID representing the predicted emotion from the provided text.
+            Tuple[int, float]: A tuple containing the class ID and the probability of the predicted
+                               emotion from the provided text.
         """
         # Tokenize the input text and move tensors to the appropriate device
         inputs = self.tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=128).to(
@@ -62,6 +66,11 @@ class EmotionPredictor:
         with torch.no_grad():
             outputs = self.model(**inputs)
 
-        # Extract and return the predicted class ID
-        predicted_class_id = outputs.logits.argmax(dim=1).item()
-        return predicted_class_id
+        # Apply softmax to convert logits to probabilities.
+        probabilities = softmax(outputs.logits, dim=1)
+
+        # Extract and return the predicted class ID and its probability.
+        predicted_class_id = probabilities.argmax(dim=1).item()
+        predicted_probability = probabilities.max(dim=1).values.item()
+
+        return predicted_class_id, predicted_probability
