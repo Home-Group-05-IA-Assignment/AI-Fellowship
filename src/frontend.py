@@ -1,5 +1,8 @@
 import streamlit as st
 import backend as bk
+from src.models.GRU_model import GRUEmotionPredictor
+from src.models.bert_model import EmotionBERTPredictor
+from src.models.logistic_model import EmotionLogisticPredictor
 
 st.session_state['send_button_disabled'] = True
 
@@ -7,6 +10,15 @@ st.title("¿Sabes como controlar tus emociones? El primer paso es identificarlas
 
 firstIn = False
 send_button_disabled = True
+# Aquí, configura tus modelos o cualquier setup inicial necesario
+
+
+model_options = {
+    "Logistic Regression": 0,
+    "Gated Recurrent Unit-GRU": 1,
+    "Bidirectional Encoder Representations from Transformers-BERT": 2
+}
+
 
 def main():
     global firstIn
@@ -24,6 +36,7 @@ def main():
             emotion = text
             st.write(f"La emoción que estás sintiendo es: {emotion}")
             firstIn = True
+    model_choice = st.selectbox("Select an emotion prediction model:", list(self.model_options.keys()))
 
     with tab2:
         chat = bk.start_chat()
@@ -42,7 +55,6 @@ def main():
             firstChat = parameters + emotion
             response = bk.send_message(firstChat, chat)
             st.write(response)
-
 
 
 if __name__ == "__main__":

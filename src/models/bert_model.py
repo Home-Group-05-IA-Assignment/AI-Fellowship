@@ -5,7 +5,7 @@ from torch.nn.functional import softmax
 from src.models.emotion_model import IEmotionPredictor
 
 
-class EmotionPredictor(IEmotionPredictor):
+class EmotionBERTPredictor(IEmotionPredictor):
     """
     A class designed to predict emotions from textual input using pre-trained models
     from the Hugging Face Transformers library.

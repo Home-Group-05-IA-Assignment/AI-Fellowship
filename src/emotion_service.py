@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Any
 
 from src.ai_controller import text_processor
 from src.models.emotion_model import IEmotionPredictor
@@ -25,7 +25,8 @@ class EmotionAnalysisService:
         """
         self.emotion_predictor = emotion_predictor
         self.text_handler = TextHandler()
-    def analyze_text(self, text: str) -> Tuple[int, float]:
+
+    def analyze_text(self, text):
         """
         Uses the injected emotion_predictor to analyze the given text, translate, process and determine its emotion.
 
@@ -35,13 +36,17 @@ class EmotionAnalysisService:
         Returns:
             Tuple[int, float]: A tuple containing the class ID and the probability of the predicted
                                emotion from the provided text.
+            input_language (str): Original language of input text. Defaults to 'en'.
         """
 
         # Language detection and optional translation
-        input_language, translated = self.text_handler.detect_language(text)
+        translated = self.text_handler.detect_language(text)
 
         is_logistic = isinstance(self.emotion_predictor, EmotionLogisticPredictor)
-        processed_text = text_processor.preprocess_text(text, is_logistic)
+        processed_text = text_processor.preprocess_text(translated, is_logistic)
+        # Prediction
+        prediction, percentage = self.emotion_predictor.predict_emotion(processed_text)
+        # Mapping label and description
+        prediction_label, description_label = self.text_handler.emotion_mapping(prediction)
 
-        self.emotion_predictor.predict_emotion(text)
-        return
+        return prediction_label, description_label, percentage

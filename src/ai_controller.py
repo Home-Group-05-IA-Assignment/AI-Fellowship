@@ -1,53 +1,29 @@
-from flask import Flask, request, jsonify
-from src.models.bert_model import EmotionPredictor
-from src.utils.input_handler import TextHandler
-from src.utils.text_preprocessor import TextPreprocessor
+from src.models.GRU_model import GRUEmotionPredictor
+from src.models.bert_model import EmotionBERTPredictor
+from src.models.emotion_model import IEmotionPredictor
+from src.services.emotion_analysis_service import EmotionAnalysisService
 
-# Initialize the Flask application
-app = Flask(__name__)
-
-# Initialize the emotion prediction model, input handler, and text preprocessor
-emotion_predictor = EmotionPredictor(model_id="Valwolfor/distilbert_emotions_fellowship")
-input_handler = TextHandler()
-text_processor = TextPreprocessor()
+from src.models.logistic_model import EmotionLogisticPredictor
 
 
+class EmotionController:
+    def __init__(self):
+        """
+        Initialize the EmotionController instance, setting up available models and an optional initial service setup.
+        """
+        self.model_options = {
+            0: EmotionLogisticPredictor(),
+            1: GRUEmotionPredictor(),
+            2: EmotionBERTPredictor()
+        }
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    """
-    Predicts the emotion from the input text.
-    Note: Language detection and translation (e.g., Spanish to English) should be handled separately.
+    def run_analysis(self, chosen_model, text):
+        """
+        Conducts emotion analysis on text provided by the user, utilizing the selected predictive model.
+        """
 
-    Expected JSON format in request:
-    {
-        "text": "<input_text_here>"
-    }
+        self.service = EmotionAnalysisService(chosen_model)
 
-    Response JSON format:
-    {
-        "emotion": "<predicted_emotion>",
-        "description": "<description_of_emotion>"
-    }
+        prediction_label, description_label, percentage = self.service.analyze_text(text)
 
-    Returns:
-        - 400 Bad Request if "text" is missing from the request.
-        - JSON response with predicted emotion and description.
-    """
-
-    if not request.json or 'text' not in request.json:
-        return jsonify({'error': 'Invalid request, "text" field is expected.'}), 400
-
-    text = request.json['text']
-    # Language detection and optional translation (implementation needed)
-    # TODO: fix input es or en
-    processed_text = text_processor.preprocess_text(text)
-
-    prediction = emotion_predictor.predict_emotion(processed_text)
-    emotion, description = input_handler.get_emotion_description(prediction)
-
-    return jsonify({'emotion': emotion, 'description': description})
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        return prediction_label, description_label, percentage

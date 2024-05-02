@@ -20,7 +20,7 @@ class TextHandler:
         translate_from_spanish(text: str) -> str:
             Translates Spanish text to English. Placeholder method.
 
-        detect_language(text: str) -> (str, str):
+        detect_language(text: str) -> str:
             Detects the language of the input text. Suggests translation for Spanish texts.
 
         get_emotion_description(predicted_class_id: int, input_language: str = 'en') -> (str, str):
@@ -46,7 +46,7 @@ class TextHandler:
         self.GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
         self.gemini_model = genai.GenerativeModel('gemini-pro')
 
-    def translate_from_spanish(self, text: str) -> str:
+    def translate_from_spanish(self, text):
         """
         Translates Spanish text to English using Gemini's model. Currently acts as a placeholder
         and should be implemented or integrated with actual translation services.
@@ -63,7 +63,7 @@ class TextHandler:
         response = chat.send_message(parameter + text)
         return response.text
 
-    def detect_language(self, text: str) -> (str, str):
+    def detect_language(self, text):
         """
         Determines the language of the provided text using langdetect. Suggests translation
         if the detected language is Spanish.
@@ -72,30 +72,27 @@ class TextHandler:
             text (str): Text to perform language detection on.
 
         Returns:
-            Tuple[str, str]: Detected language (ISO 639-1 code) and the text, translated if Spanish.
+            str: The text, translated if Spanish.
         """
         try:
             input_language = detect(text)
             if input_language == 'es':
                 text = self.translate_from_spanish(text)
-            return input_language, text
+            return text
         except Exception as e:
             print(f"Error detecting language: {e}")
-            return 'unknown', text
+            return text
 
-    def get_emotion_description(self, predicted_class_id: int, input_language: str = 'en') -> (str, str):
+    def get_emotion_description(self, predicted_class_id):
         """
         Matches a predicted emotion class ID to its corresponding human-readable emotion and
         description. Optionally translates the description to Spanish.
 
         Args:
             predicted_class_id (int): ID of the predicted emotion.
-            input_language (str): Original language of input text. Defaults to 'en'.
 
         Returns:
             Tuple[str, str]: Emotion and its descriptive message, translated to Spanish if applicable.
         """
-        emotion, description = self.emotion_mapping[predicted_class_id]
-        if input_language == 'es':
-            description = self.translate_from_spanish(description)
-        return emotion, description
+
+        return self.emotion_mapping[predicted_class_id]
