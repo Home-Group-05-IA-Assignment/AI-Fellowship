@@ -55,5 +55,5 @@ class ChatService:
         Returns:
             The text of the response from the chat session.
         """
-        response = chat.send_message(f"{parameter} {message}")
+        response = chat.generate_content(f"{parameter} {message}")
         return response.text

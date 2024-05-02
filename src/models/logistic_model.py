@@ -1,7 +1,6 @@
-import pandas as pd
 import pickle
 
-from src.models.emotion_model import IEmotionPredictor
+from models.emotion_model import IEmotionPredictor
 
 
 class EmotionLogisticPredictor(IEmotionPredictor):
@@ -17,13 +16,13 @@ class EmotionLogisticPredictor(IEmotionPredictor):
 
     def __init__(self):
         """Load pretrained models."""
-        with open('model-repository/tfidf_vectorizer.pkl', 'rb') as f_tfidf:
+        with open('./models/model-repository/logistic-reg-model/tfidf_vectorizer.pkl', 'rb') as f_tfidf:
             self.tfidf_vectorizer = pickle.load(f_tfidf)
 
-        with open('model-repository/logisticRegModel.pkl', 'rb') as f_logreg:
+        with open('./models/model-repository/logistic-reg-model/logisticRegModel.pkl', 'rb') as f_logreg:
             self.emotions_model = pickle.load(f_logreg)
 
-    def predict_emotion(self, text):
+    def predict_emotion(self, text: str):
         """
         Predict emotions for a single text.
 
@@ -37,9 +36,19 @@ class EmotionLogisticPredictor(IEmotionPredictor):
         Tuple[int, float]: A tuple containing the class ID and the probability of the predicted
                            emotion from the provided text.
         """
+        if isinstance(text, list):
+            text = ' '.join(text)
+
+        if not text.strip():
+            raise ValueError("The input text is empty.")
+
+        if isinstance(text, str):
+            texts = [text]
+        else:
+            texts = text
 
         # Vectorize the text
-        X = self.tfidf_vectorizer.transform([text])
+        X = self.tfidf_vectorizer.transform(texts)
 
         # Predict probabilities for each emotion
         predicted_probabilities = self.emotions_model.predict_proba(X)

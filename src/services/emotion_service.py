@@ -1,9 +1,9 @@
 from typing import Tuple, Any
 
-from src.ai_controller import text_processor
-from src.models.emotion_model import IEmotionPredictor
-from src.models.logistic_model import EmotionLogisticPredictor
-from src.utils.input_handler import TextHandler
+from models.emotion_model import IEmotionPredictor
+from models.logistic_model import EmotionLogisticPredictor
+from utils.input_handler import TextHandler
+from utils.text_preprocessor import TextPreprocessor
 
 
 class EmotionAnalysisService:
@@ -23,8 +23,10 @@ class EmotionAnalysisService:
         Args:
             emotion_predictor (IEmotionPredictor): An implementation of the emotion predictor interface.
         """
-        self.emotion_predictor = emotion_predictor
+
+        self.emotion_predictor: IEmotionPredictor = emotion_predictor
         self.text_handler = TextHandler()
+        self.text_processor = TextPreprocessor()
 
     def analyze_text(self, text):
         """
@@ -43,10 +45,10 @@ class EmotionAnalysisService:
         translated = self.text_handler.detect_language(text)
 
         is_logistic = isinstance(self.emotion_predictor, EmotionLogisticPredictor)
-        processed_text = text_processor.preprocess_text(translated, is_logistic)
+        processed_text = self.text_processor.preprocess_text(translated, is_logistic)
         # Prediction
         prediction, percentage = self.emotion_predictor.predict_emotion(processed_text)
         # Mapping label and description
-        prediction_label, description_label = self.text_handler.emotion_mapping(prediction)
+        prediction_label, description_label = self.text_handler.get_emotion_description(prediction)
 
         return prediction_label, description_label, percentage

@@ -2,7 +2,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 from torch.nn.functional import softmax
 
-from src.models.emotion_model import IEmotionPredictor
+from models.emotion_model import IEmotionPredictor
 
 
 class EmotionBERTPredictor(IEmotionPredictor):

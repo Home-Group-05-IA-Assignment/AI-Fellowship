@@ -1,10 +1,7 @@
-from src.models.GRU_model import GRUEmotionPredictor
-from src.models.bert_model import EmotionBERTPredictor
-from src.services.emotion_service import EmotionAnalysisService
-import textwrap
-from IPython.display import Markdown
-from src.models.logistic_model import EmotionLogisticPredictor
-from src.services.gemini_service import ChatService
+from models.bert_model import EmotionBERTPredictor
+from services.emotion_service import EmotionAnalysisService
+from models.logistic_model import EmotionLogisticPredictor
+from services.gemini_service import ChatService
 
 
 class EmotionController:
@@ -15,8 +12,7 @@ class EmotionController:
         self.service = None
         self.model_options = {
             0: EmotionLogisticPredictor(),
-            1: GRUEmotionPredictor(),
-            2: EmotionBERTPredictor()
+            1: EmotionBERTPredictor()
         }
         self.gemini_service = ChatService()
 
@@ -25,18 +21,20 @@ class EmotionController:
         Conducts emotion analysis on text provided by the user, utilizing the selected predictive model.
         """
 
-        self.service = EmotionAnalysisService(chosen_model)
+        if chosen_model == 0:
+
+            self.service = EmotionAnalysisService(EmotionLogisticPredictor())
+        else:
+
+            self.service = EmotionAnalysisService(EmotionBERTPredictor())
 
         prediction_label, description_label, percentage = self.service.analyze_text(text)
 
         return prediction_label, description_label, percentage
 
-    def to_markdown(self, text):
-        text_replaced = text.replace('•', '  *')
-        return Markdown(textwrap.indent(text_replaced, '> ', predicate=lambda _: True))
-
     def gemini_controller(self, parameter, message):
         chat = self.gemini_service.start_chat()
-        response = chat.send_message(parameter, message, chat)
+        parameter += f" {message}"
+        response = chat.send_message(parameter)
+        return response.text
 
-        return self.to_markdown(response)

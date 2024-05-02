@@ -1,10 +1,14 @@
 import re
 import emoji
 import pandas as pd
+import nltk
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+
+nltk.download('punkt')
+nltk.download('wordnet')
 
 
 class TextPreprocessor:
@@ -53,6 +57,7 @@ class TextPreprocessor:
 
         Returns:
             str: The preprocessed text.
+            :param text:
             :param is_logistic:
         """
         # Initial preprocessing step to expand chat abbreviations
@@ -82,10 +87,10 @@ class TextPreprocessor:
         Args:
             text (str): The text containing possible chat abbreviations.
 
-        Returns:
+        Returns:../../ai-models/clean-data/abbreviations.json
             str: Text with chat abbreviations expanded.
         """
-        replacements_df = pd.read_json('../../ai-models/clean-data/abbreviations.json', orient='index')
+        replacements_df = pd.read_json('../ai-models/clean-data/abbreviations.json', orient='index')
         replacements_df.index = replacements_df.index.str.upper()
         replacements = replacements_df[0].to_dict()
 
