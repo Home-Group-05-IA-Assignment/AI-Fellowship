@@ -39,4 +39,4 @@ class EmotionController:
         chat = self.gemini_service.start_chat()
         response = chat.send_message(parameter, message, chat)
 
-        return response
+        return self.to_markdown(response)
