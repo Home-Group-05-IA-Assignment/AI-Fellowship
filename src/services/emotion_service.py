@@ -46,6 +46,7 @@ class EmotionAnalysisService:
 
         is_logistic = isinstance(self.emotion_predictor, EmotionLogisticPredictor)
         processed_text = self.text_processor.preprocess_text(translated, is_logistic)
+        
         # Prediction
         prediction, percentage = self.emotion_predictor.predict_emotion(processed_text)
         # Mapping label and description

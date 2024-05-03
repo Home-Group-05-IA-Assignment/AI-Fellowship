@@ -98,7 +98,9 @@ class EmotionLogisticPredictor(IEmotionPredictor):
         predicted_probability = predicted_probabilities.max(axis=1)[0]
         """
         """We supose text is a dataframe which is returned from text_preprocessor"""
+        print('estoy obteniendo las probas')
         df = self.LogisticRegressionModel(text)
+        print(f'Los resultados para el modelo son: \n {df.head(6)}')
         #return the index and the max probability
         predicted_class_id = df.avg_prob.idxmax()
         predicted_probability = df[predicted_class_id].avg_prob

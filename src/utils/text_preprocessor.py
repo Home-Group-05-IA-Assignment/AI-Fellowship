@@ -73,10 +73,11 @@ class TextPreprocessor:
     Tokenizes and cleans the Dataframe from readFromStr (used for logistic model)
     """
     def tokenizeDF(self,dataframe):
+        
     #drop NaN values
         dataframe = dataframe.dropna(subset=["text"])
     # lowercase, digits and extra-spaces
-        dataframe["t_text"] = dataframe["text"].str.lower()
+        dataframe["t_text"] = dataframe["text"].astype(str).str.lower()
         dataframe["t_text"] = dataframe["t_text"].apply(lambda x: re.sub(r"\d+","",x))
         dataframe["t_text"] = dataframe["t_text"].apply(lambda x: re.sub(r"\s+"," ",x))
 
@@ -117,6 +118,7 @@ class TextPreprocessor:
             :param is_logistic:
         """
         if is_logistic:
+            print('Estuve aqui')
             #tokens = word_tokenize(text)
             #filtered_tokens = [word for word in tokens if word not in self.stop_words]
             #text = [self.lemmatizer.lemmatize(word) for word in filtered_tokens]
