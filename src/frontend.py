@@ -22,7 +22,7 @@ def main():
     emotion = ""
     parameter = "Toma el papel de un consegero para dar recomendaciones de lecturas(no compartas enlaces) y tecnicas para controlar las emociones, especialmente invitando a la persona a hacer actividades offline, ademas de dar consejos y escuchar al usuario. Segun el siguiente texto que recomendaciones harias: "
 
-    tab1, tab2 = st.tabs(["Explora tus emociones", "¿Quieres ayuda?"])
+    tab1, tab2, tab3 = st.tabs(["Explora tus emociones", "¿Quieres ayuda?","Explora tu texto"])
     prediction_label, description_label, percentage = "", "", ""
     with tab1:
         st.header("Según tu texto te diremos qué emoción estás sintiendo")
@@ -57,6 +57,7 @@ def main():
             firstIn = False
             response = controller.gemini_controller(parameter, emotion)
             st.write(response)
+    
 
 
 def get_response_text(generate_content_response):
