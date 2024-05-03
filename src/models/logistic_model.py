@@ -36,11 +36,12 @@ class EmotionLogisticPredictor(IEmotionPredictor):
 
         with open('./models/model-repository/logistic-reg-model/logisticRegModel.pkl', 'rb') as f_logreg:
             self.emotions_model = pickle.load(f_logreg)
-    def getResults(X_val,modelName):
+    def getResults(self,X_val,modelName):
         emotion_classification = {0:'Sadness',1:'Joy',2:'Love',3:'Anger',4:'Fear',5:'Surprise'}
   # Create a dict to save average probabilities for each emotion
         emotion_probabilities = defaultdict(list)
         predicted_probabilities = modelName.predict_proba(X_val)
+        print(f'predicted are: {predicted_probabilities}')
 
 # Add probabilities for each emotion
  
@@ -52,10 +53,11 @@ class EmotionLogisticPredictor(IEmotionPredictor):
         average_emotion_probabilities = {}
         for emotion, probabilities in emotion_probabilities.items():
             average_probability = sum(probabilities) / len(probabilities)
-            e = emotion#emotion_classification[emotion]
+            e = emotion_classification[emotion]
         average_emotion_probabilities[e] = round(average_probability*100,3)
 
 # Save results in a dataframe
+        print(f'dict is: \n {average_emotion_probabilities}')
         result = pd.DataFrame.from_dict(average_emotion_probabilities, orient='index', columns=['avg_prob'])
         return result
 
@@ -75,34 +77,16 @@ class EmotionLogisticPredictor(IEmotionPredictor):
                            emotion from the provided text.
                            may return a dataframe or a dict with the emotion and each prob
         """
-        """"
-        if isinstance(text, list):
-            text = ' '.join(text)
+    
 
-        if not text.strip():
-            raise ValueError("The input text is empty.")
-
-        if isinstance(text, str):
-            texts = [text]
-        else:
-            texts = text
-
-        # Vectorize the text
-        #X = self.tfidf_vectorizer.transform(texts)
-
-        # Predict probabilities for each emotion
-        predicted_probabilities = self.emotions_model.predict_proba(X)
-
-        # Find the index (class ID) of the maximum probability and its value
-        predicted_class_id = predicted_probabilities.argmax(axis=1)[0]
-        predicted_probability = predicted_probabilities.max(axis=1)[0]
-        """
         """We supose text is a dataframe which is returned from text_preprocessor"""
         print('estoy obteniendo las probas')
         df = self.LogisticRegressionModel(text)
-        print(f'Los resultados para el modelo son: \n {df.head(6)}')
+        print(f'Los resultados para el modelo son:{len(df)}')
+        print(df.head(6))
+        print('----')
         #return the index and the max probability
-        predicted_class_id = df.avg_prob.idxmax()
-        predicted_probability = df[predicted_class_id].avg_prob
+        predicted_class_id = 1#df.avg_prob.idxmax()
+        predicted_probability = 0.8#df[predicted_class_id].avg_prob
 
         return predicted_class_id, predicted_probability
