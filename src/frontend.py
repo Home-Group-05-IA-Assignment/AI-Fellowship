@@ -33,9 +33,11 @@ def main():
         if st.button("Identificar emoción"):
             if text.strip():
 
-                prediction_label, description_label, percentage = controller.run_analysis(model_options[model_choice], text)
-                st.write(
-                    f"La emoción que estás sintiendo es: {prediction_label}, la probabilidad: {percentage:.2%}, {description_label}. Si quieres profundizar un poco más ve a la segunda pestaña.")
+                try:
+                    prediction_label, description_label, percentage = controller.run_analysis(model_options[model_choice], text)
+                    st.write(f"La emoción que estás sintiendo es: {prediction_label}, la probabilidad: {percentage:.2%}, {description_label}. Si quieres profundizar un poco más ve a la segunda pestaña.")
+                except:
+                    st.write(f"Por favor escribe algo más largo. O intenta con otro modelo")
             else:
                 st.write("Por favor, introduce algo de texto para analizar.")
 

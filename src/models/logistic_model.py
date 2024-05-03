@@ -41,7 +41,7 @@ class EmotionLogisticPredictor(IEmotionPredictor):
   # Create a dict to save average probabilities for each emotion
         emotion_probabilities = defaultdict(list)
         predicted_probabilities = modelName.predict_proba(X_val)
-        print(f'predicted are: {predicted_probabilities}')
+        
 
 # Add probabilities for each emotion
  
@@ -53,8 +53,8 @@ class EmotionLogisticPredictor(IEmotionPredictor):
         average_emotion_probabilities = {}
         for emotion, probabilities in emotion_probabilities.items():
             average_probability = sum(probabilities) / len(probabilities)
-            e = emotion_classification[emotion]
-        average_emotion_probabilities[e] = round(average_probability*100,3)
+            e = emotion#emotion_classification[emotion]
+            average_emotion_probabilities[e] = round(average_probability,3)
 
 # Save results in a dataframe
         print(f'dict is: \n {average_emotion_probabilities}')
@@ -86,7 +86,9 @@ class EmotionLogisticPredictor(IEmotionPredictor):
         print(df.head(6))
         print('----')
         #return the index and the max probability
-        predicted_class_id = 1#df.avg_prob.idxmax()
-        predicted_probability = 0.8#df[predicted_class_id].avg_prob
+        predicted_class_id = df.avg_prob.idxmax()
+        predicted_probability = df.iloc[predicted_class_id].avg_prob
+        print('************')
+        print(predicted_probability)
 
         return predicted_class_id, predicted_probability

@@ -118,7 +118,7 @@ class TextPreprocessor:
             :param is_logistic:
         """
         if is_logistic:
-            print('Estuve aqui')
+            
             #tokens = word_tokenize(text)
             #filtered_tokens = [word for word in tokens if word not in self.stop_words]
             #text = [self.lemmatizer.lemmatize(word) for word in filtered_tokens]
