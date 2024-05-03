@@ -15,7 +15,7 @@ model_options = {
     "Bidirectional Encoder Representations from Transformers-BERT": 1
 }
 
-
+#comenzar
 def main():
     global firstIn
     global send_button_disabled
