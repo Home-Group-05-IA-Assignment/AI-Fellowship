@@ -6,6 +6,10 @@ from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+from string import punctuation
+from nltk.corpus import wordnet
+from spacy.lang.en.stop_words import STOP_WORDS
+from wordcloud import STOPWORDS
 
 nltk.download('punkt')
 nltk.download('wordnet')
@@ -34,6 +38,11 @@ class TextPreprocessor:
         replace_chat_words(text: str) -> str
             Replaces abbreviations often found in chat messages with their full forms
             using a predefined JSON file as a source for the mappings.
+
+        readFromStr(str) -> pandas.DataFrame
+            Reads the lowered string and converts it into a Dataframe. Necessary for logModel
+        tokenizeDF(pandas.DataFrame) -> pandas.DataFrame
+            Cleans and tokenizes the Datafrme. Necessary for logModel
     """
 
     def __init__(self):
@@ -45,6 +54,56 @@ class TextPreprocessor:
         self.stop_words = set(stopwords.words('english'))
         self.ps = PorterStemmer()
         self.lemmatizer = WordNetLemmatizer()
+
+    """
+    Enables reading from strings and returns a dataframe with the data (used for logistic model)
+    """
+    def readFromStr(self,s):
+        df_result = pd.DataFrame(columns=('text', 't_text'))
+        text = []
+        subtext = ""
+        #Separate into substrings when it finds a , or . or \n
+        #then add it to the df
+        for word in s:
+            if word != "," and word != "." and word != "\n":    
+                subtext+=word
+            else:
+                text.append(subtext)
+                subtext = "" 
+        df_result['text'] = text
+        return df_result
+    """
+    Tokenizes and cleans the Dataframe from readFromStr (used for logistic model)
+    """
+    def tokenizeDF(self,dataframe):
+    #drop NaN values
+        dataframe = dataframe.dropna(subset=["text"])
+    # lowercase, digits and extra-spaces
+        dataframe["t_text"] = dataframe["text"].str.lower()
+        dataframe["t_text"] = dataframe["t_text"].apply(lambda x: re.sub(r"\d+","",x))
+        dataframe["t_text"] = dataframe["t_text"].apply(lambda x: re.sub(r"\s+"," ",x))
+
+    # links and special characters
+        dataframe["t_text"] = dataframe["t_text"].apply(lambda x: re.sub(r"http\S+","",x))
+        dataframe["t_text"] = dataframe["t_text"].apply(lambda x: re.sub(r"[^\w\s]","",x))
+
+    #Tokenization and removing puntuation
+        dataframe["t_text"] = dataframe["t_text"].apply(lambda x:word_tokenize(x))
+        dataframe["t_text"] = dataframe["t_text"].apply(lambda items:[item for item in items if item not in punctuation])
+
+    #Stop words
+        stop_words = stopwords.words("english")
+        com_stop_words = stop_words + list(STOP_WORDS) + list(STOPWORDS)
+    
+
+        dataframe["t_text"] = dataframe["t_text"].apply(lambda words:[word for word in words if word not in com_stop_words])
+    #Lemmatization
+        lem = WordNetLemmatizer()
+        dataframe["t_text"] = dataframe["t_text"].apply(lambda words:" ".join([lem.lemmatize(word,pos="v") for word in words]))
+
+    #Finally delete rows with empty data
+        dataframe.drop(dataframe.loc[dataframe["t_text"]==""].index,inplace=True)
+        return dataframe
 
     def preprocess_text(self, text, is_logistic=False):
         """
@@ -71,9 +130,12 @@ class TextPreprocessor:
 
         # Removing stop words and stemming the remainders
         if is_logistic:
-            tokens = word_tokenize(text)
-            filtered_tokens = [word for word in tokens if word not in self.stop_words]
-            text = [self.lemmatizer.lemmatize(word) for word in filtered_tokens]
+            #tokens = word_tokenize(text)
+            #filtered_tokens = [word for word in tokens if word not in self.stop_words]
+            #text = [self.lemmatizer.lemmatize(word) for word in filtered_tokens]
+            text = self.readFromStr(text)
+            """Text now is a Dataframe"""
+            text = self.tokenizeDF(text)
         else:
             text = " ".join([self.ps.stem(word) for word in text.split() if word not in self.stop_words])
         return text
