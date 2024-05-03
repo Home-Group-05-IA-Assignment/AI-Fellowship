@@ -20,7 +20,7 @@ def main():
     global firstIn
     global send_button_disabled
     emotion = ""
-    parameter = "Toma el papel de un consegero para dar recomendaciones de lecturas(no compartas enlaces) y tecnicas para controlar las emociones, especialmente invitando a la persona a hacer actividades offline, ademas de dar consejos y escuchar al usuario. Segun el siguiente texto que recomendaciones harias: "
+    parameter = "Toma el papel de un consejero para dar recomendaciones de lecturas(no compartas enlaces) y tecnicas para controlar las emociones, especialmente invitando a la persona a hacer actividades offline, ademas de dar consejos y escuchar al usuario. Segun el siguiente texto que recomendaciones harias: "
 
     tab1, tab2, tab3 = st.tabs(["Explora tus emociones", "¿Quieres ayuda?","Explora tu texto"])
     prediction_label, description_label, percentage = "", "", ""
