@@ -1,5 +1,7 @@
 import pickle
-
+import pandas as pd
+from collections import defaultdict
+import pickle
 from models.emotion_model import IEmotionPredictor
 
 
@@ -10,9 +12,22 @@ class EmotionLogisticPredictor(IEmotionPredictor):
     Attributes:
     ----------
     tfidf_vectorizer : The TF-IDF vectorizer model.
-    emotions_model : The logistic regression model for emotion prediction.
+    LogisticRegressionModel : The logistic regression model for emotion prediction.
     emotion_classification : A dictionary for mapping numeric predictions to emotion labels.
     """
+
+    def characteristicsExtraction(self,X_val):
+    # Characteristics Extraction. 
+    #We use the pretrained model of tfidf_vectorizer
+        X_val  = pd.DataFrame(self.tfidf_vectorizer.transform(X_val).toarray())
+        X_val.columns = self.tfidf_vectorizer.get_feature_names_out()
+        return X_val
+    
+
+    def LogisticRegressionModel(self,text_dataframe):
+            X_test = self.characteristicsExtraction(text_dataframe['t_text'])
+            #returns a dataframe with all amotions
+            return self.getResults(X_val=X_test,modelName=self.emotions_model)
 
     def __init__(self):
         """Load pretrained models."""
@@ -21,10 +36,33 @@ class EmotionLogisticPredictor(IEmotionPredictor):
 
         with open('./models/model-repository/logistic-reg-model/logisticRegModel.pkl', 'rb') as f_logreg:
             self.emotions_model = pickle.load(f_logreg)
+    def getResults(X_val,modelName):
+        emotion_classification = {0:'Sadness',1:'Joy',2:'Love',3:'Anger',4:'Fear',5:'Surprise'}
+  # Create a dict to save average probabilities for each emotion
+        emotion_probabilities = defaultdict(list)
+        predicted_probabilities = modelName.predict_proba(X_val)
 
-    def predict_emotion(self, text: str):
+# Add probabilities for each emotion
+ 
+        for probabilities in predicted_probabilities:
+            for emotion, probability in zip(modelName.classes_, probabilities):
+                emotion_probabilities[emotion].append(probability)
+
+# Get the average of each emotion
+        average_emotion_probabilities = {}
+        for emotion, probabilities in emotion_probabilities.items():
+            average_probability = sum(probabilities) / len(probabilities)
+            e = emotion#emotion_classification[emotion]
+        average_emotion_probabilities[e] = round(average_probability*100,3)
+
+# Save results in a dataframe
+        result = pd.DataFrame.from_dict(average_emotion_probabilities, orient='index', columns=['avg_prob'])
+        return result
+
+
+    def predict_emotion(self, text: pd.DataFrame):
         """
-        Predict emotions for a single text.
+        Predict emotions for a  text.
 
         Parameters:
         ----------
@@ -35,7 +73,9 @@ class EmotionLogisticPredictor(IEmotionPredictor):
         -------
         Tuple[int, float]: A tuple containing the class ID and the probability of the predicted
                            emotion from the provided text.
+                           may return a dataframe or a dict with the emotion and each prob
         """
+        """"
         if isinstance(text, list):
             text = ' '.join(text)
 
@@ -48,7 +88,7 @@ class EmotionLogisticPredictor(IEmotionPredictor):
             texts = text
 
         # Vectorize the text
-        X = self.tfidf_vectorizer.transform(texts)
+        #X = self.tfidf_vectorizer.transform(texts)
 
         # Predict probabilities for each emotion
         predicted_probabilities = self.emotions_model.predict_proba(X)
@@ -56,5 +96,11 @@ class EmotionLogisticPredictor(IEmotionPredictor):
         # Find the index (class ID) of the maximum probability and its value
         predicted_class_id = predicted_probabilities.argmax(axis=1)[0]
         predicted_probability = predicted_probabilities.max(axis=1)[0]
+        """
+        """We supose text is a dataframe which is returned from text_preprocessor"""
+        df = self.LogisticRegressionModel(text)
+        #return the index and the max probability
+        predicted_class_id = df.avg_prob.idxmax()
+        predicted_probability = df[predicted_class_id].avg_prob
 
         return predicted_class_id, predicted_probability
