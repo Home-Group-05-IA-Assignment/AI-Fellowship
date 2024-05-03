@@ -1,52 +1,40 @@
-from flask import Flask, request, jsonify
-from ai_model import EmotionPredictor
-from input_handler import TextHandler
-from text_preprocessor import TextPreprocessor
-
-# Initialize the Flask application
-app = Flask(__name__)
-
-# Initialize the emotion prediction model, input handler, and text preprocessor
-emotion_predictor = EmotionPredictor(model_id="Valwolfor/distilbert_emotions_fellowship")
-input_handler = TextHandler()
-text_processor = TextPreprocessor()
+from models.bert_model import EmotionBERTPredictor
+from services.emotion_service import EmotionAnalysisService
+from models.logistic_model import EmotionLogisticPredictor
+from services.gemini_service import ChatService
 
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    """
-    Predicts the emotion from the input text.
-    Note: Language detection and translation (e.g., Spanish to English) should be handled separately.
+class EmotionController:
+    def __init__(self):
+        """
+        Initialize the EmotionController instance, setting up available models and an optional initial service setup.
+        """
+        self.service = None
+        self.model_options = {
+            0: EmotionLogisticPredictor(),
+            1: EmotionBERTPredictor()
+        }
+        self.gemini_service = ChatService()
 
-    Expected JSON format in request:
-    {
-        "text": "<input_text_here>"
-    }
+    def run_analysis(self, chosen_model, text):
+        """
+        Conducts emotion analysis on text provided by the user, utilizing the selected predictive model.
+        """
 
-    Response JSON format:
-    {
-        "emotion": "<predicted_emotion>",
-        "description": "<description_of_emotion>"
-    }
+        if chosen_model == 0:
 
-    Returns:
-        - 400 Bad Request if "text" is missing from the request.
-        - JSON response with predicted emotion and description.
-    """
+            self.service = EmotionAnalysisService(EmotionLogisticPredictor())
+        else:
 
-    if not request.json or 'text' not in request.json:
-        return jsonify({'error': 'Invalid request, "text" field is expected.'}), 400
+            self.service = EmotionAnalysisService(EmotionBERTPredictor())
 
-    text = request.json['text']
-    # Language detection and optional translation (implementation needed)
-    # TODO: fix input es or en
-    processed_text = text_processor.preprocess_text(text)
+        prediction_label, description_label, percentage = self.service.analyze_text(text)
 
-    prediction = emotion_predictor.predict_emotion(processed_text)
-    emotion, description = input_handler.get_emotion_description(prediction)
+        return prediction_label, description_label, percentage
 
-    return jsonify({'emotion': emotion, 'description': description})
+    def gemini_controller(self, parameter, message):
+        chat = self.gemini_service.start_chat()
+        parameter += f" {message}"
+        response = chat.send_message(parameter)
+        return response.text
 
-
-if __name__ == '__main__':
-    app.run(debug=True)

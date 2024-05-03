@@ -1,4 +1,4 @@
-# IA-Fellowship: Emotion and Stress Recognition Application
+# AI-Fellowship: Emotion and Stress Recognition Application
 ## Description
 
 IA-Fellowship is an innovative application designed to accurately recognize emotions and stress levels embedded within textual data. By harnessing cutting-edge natural language processing (NLP) and machine learning techniques, it facilitates the identification and analysis of various human emotional states conveyed through text.
