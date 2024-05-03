@@ -20,9 +20,9 @@ class EmotionController:
         """
         Conducts emotion analysis on text provided by the user, utilizing the selected predictive model.
         """
-
+        print(f'text received was: \n {text}')
         if chosen_model == 0:
-
+            
             self.service = EmotionAnalysisService(EmotionLogisticPredictor())
         else:
 
