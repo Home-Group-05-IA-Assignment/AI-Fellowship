@@ -5,7 +5,7 @@ from ai_controller import EmotionController
 controller = EmotionController()
 st.session_state['send_button_disabled'] = True
 
-st.title("¿Sabes como controlar tus emociones? El primer paso es identificarlas")
+st.title("Do you know how to control your emotions? The first step is to identify them")
 
 firstIn = False
 send_button_disabled = True
@@ -15,38 +15,36 @@ model_options = {
     "Bidirectional Encoder Representations from Transformers-BERT": 1
 }
 
-
 def main():
     global firstIn
     global send_button_disabled
     emotion = ""
-    parameter = "Toma el papel de un consegero para dar recomendaciones de lecturas(no compartas enlaces) y tecnicas para controlar las emociones, especialmente invitando a la persona a hacer actividades offline, ademas de dar consejos y escuchar al usuario. Segun el siguiente texto que recomendaciones harias: "
+    parameter = "Take on the role of a counselor to provide reading recommendations (do not share links) and techniques for controlling emotions, especially inviting the person to engage in offline activities, as well as giving advice and listening to the user. Based on the following text, what recommendations would you make: "
 
-    tab1, tab2 = st.tabs(["Explora tus emociones", "¿Quieres ayuda?"])
+    tab1, tab2 = st.tabs(["Explore Your Emotions", "Need Help?"])
     prediction_label, description_label, percentage = "", "", ""
     with tab1:
-        st.header("Según tu texto te diremos qué emoción estás sintiendo")
-        model_choice = st.selectbox("Selecciona el modelo con el que quieres trabajar: ", list(model_options.keys()))
-        text = st.text_area("Escribe aquí tu texto")
+        st.header("We'll tell you what emotion you're feeling based on your text")
+        model_choice = st.selectbox("Select the model you want to work with: ", list(model_options.keys()))
+        text = st.text_area("Enter your text here")
 
         #
-        if st.button("Identificar emoción"):
+        if st.button("Identify emotion"):
             if text.strip():
-
                 prediction_label, description_label, percentage = controller.run_analysis(model_choice, text)
                 st.write(
-                    f"La emoción que estás sintiendo es: {prediction_label}, la probabilidad: {percentage:.2%}, {description_label}. Si quieres profundizar un poco más ve a la segunda pestaña.")
+                    f"The emotion you're feeling is: {prediction_label}, the probability: {percentage:.2%}, {description_label}. If you want to delve a little deeper, go to the second tab.")
             else:
-                st.write("Por favor, introduce algo de texto para analizar.")
+                st.write("Please enter some text to analyze.")
 
     with tab2:
-        st.warning("Si sales de la pestaña se borrara la conversación")
+        st.warning("If you leave the tab, the conversation will be cleared")
 
-        st.write(f"¡Hola! Soy Gemini, tu asistente personal para controlar tus emociones. ¿En qué puedo ayudarte hoy? Tu emoción fue {prediction_label} y su probabilidad fue de {percentage:.2}")
+        st.write(f"Hello! I'm Gemini, your personal assistant for controlling your emotions. How can I help you today? Your emotion was {prediction_label} and its probability was {percentage:.2}")
 
-        message = st.text_area("Escribe aquí tu mensaje para Gemini")
+        message = st.text_area("Enter your message for Gemini here")
 
-        if st.button("Enviar"):
+        if st.button("Send"):
             parameter += f"the evaluation of the emotion was {prediction_label} and the probability {percentage}. The user write this {message}"
             response = controller.gemini_controller(parameter, message)
             st.write(response)
@@ -58,21 +56,21 @@ def main():
 
 
 def get_response_text(generate_content_response):
-    # Asegurándose de que hay candidatos disponibles
+    # Making sure candidates are available
     if not generate_content_response.result.candidates:
-        return "No se encontraron candidatos."
+        return "No candidates found."
 
-    # Tomando el primer candidato. Ajusta según sea necesario si esperas múltiples candidatos
+    # Taking the first candidate. Adjust as needed if expecting multiple candidates
     first_candidate = generate_content_response.result.candidates[0]
 
-    # Verificando que haya partes con texto disponible
+    # Checking for parts with text available
     if not first_candidate['content']['parts']:
-        return "El candidato no contiene partes con texto."
+        return "Candidate does not contain parts with text."
 
-    # Concatenando el texto de todas las partes disponibles
+    # Concatenating the text from all available parts
     response_text = ""
     for part in first_candidate['content']['parts']:
-        response_text += part['text'] + "\n"  # Asumiendo que cada parte tiene un texto a concatenar
+        response_text += part['text'] + "\n"  # Assuming each part has text to concatenate
 
     return response_text
 

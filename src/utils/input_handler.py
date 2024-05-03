@@ -36,11 +36,11 @@ class TextHandler:
         loading necessary configurations, such as the API key for translation services.
         """
         self.emotion_mapping = {
-            0: ("Sadness", "I sense sadness in this text."),
-            1: ("Joy", "This text expresses joy."),
-            2: ("Love", "Love is in the air."),
-            3: ("Anger", "There's noticeable anger here."),
-            4: ("Fear", "A sentiment of fear is detected."),
+            0: ("Sadness", "I sense sadness in this text"),
+            1: ("Joy", "This text expresses joy"),
+            2: ("Love", "Love is in the air"),
+            3: ("Anger", "There's noticeable anger here"),
+            4: ("Fear", "A sentiment of fear is detected"),
             5: ("Surprise", "What a surprise in this message!")
         }
 
