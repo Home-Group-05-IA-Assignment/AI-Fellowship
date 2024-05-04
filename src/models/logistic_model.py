@@ -36,10 +36,21 @@ class EmotionLogisticPredictor(IEmotionPredictor):
 
         with open('./models/model-repository/logistic-reg-model/logisticRegModel.pkl', 'rb') as f_logreg:
             self.emotions_model = pickle.load(f_logreg)
+
+    def getEmotionsArrays(self,modelName,dataframe):
+        emotion_classification = {0:'Sadness',1:'Joy',2:'Love',3:'Anger',4:'Fear',5:'Surprise'}
+        X_val = self.characteristicsExtraction(dataframe['t_text'])
+        num_array = modelName.predict(X_val)
+        emotions_array = []
+        for i in range(len(num_array)):
+            emotions_array.append(emotion_classification[num_array[i]])
+        return emotions_array
+
     def getResults(self,X_val,modelName):
         emotion_classification = {0:'Sadness',1:'Joy',2:'Love',3:'Anger',4:'Fear',5:'Surprise'}
   # Create a dict to save average probabilities for each emotion
         emotion_probabilities = defaultdict(list)
+        
         predicted_probabilities = modelName.predict_proba(X_val)
         
 
