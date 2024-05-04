@@ -1,6 +1,7 @@
 import streamlit as st
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+import pandas as pd
 from ai_controller import EmotionController
 from utils import text_preprocessor
 from models import logistic_model
@@ -15,7 +16,8 @@ send_button_disabled = True
 
 model_options = {
     "Logistic Regression": 0,
-    "Bidirectional Encoder Representations from Transformers-BERT": 1
+    "Bidirectional Encoder Representations from Transformers-BERT": 1,
+    "GRU": 2,
 }
 
 def main():
@@ -38,9 +40,22 @@ def main():
             if text.strip():
 
                 try:
-                    prediction_label, description_label, percentage = controller.run_analysis(model_options[model_choice], text)
-                    st.write(f"The emotion you're feeling is: {prediction_label}, the probability: {percentage:.2%}, {description_label}. If you want to delve a little deeper, go to the second tab.")
-                except:
+                    if model_choice == "GRU":
+                        res = controller.run_analysis(model_options[model_choice], text)
+                        prediction_label = max(res, key=res.get)
+                        percentage = res[prediction_label]/100
+
+                        df_emotions = pd.DataFrame(list(res.items()), columns=['Emotion', 'Probability (%)'])
+                        st.table(df_emotions)
+
+                    else:
+                        prediction_label, description_label, percentage = controller.run_analysis(model_options[model_choice], text)
+                    
+                    st.write(f"The emotion you're feeling is: {prediction_label}, the probability: {percentage:.3%}. If you want to delve a little deeper, go to the second tab.")
+                    firstIn = True
+
+                except Exception as e:
+                    print(e)
                     st.write(f"We had problems reading your text. Please write something longer or try with another model.")
             else:
                 st.write("Please enter some text to analyze.")
@@ -58,6 +73,7 @@ def main():
             st.write(response)
 
         if firstIn:
+            controller.restartChat()
             firstIn = False
             response = controller.gemini_controller(parameter, emotion)
             st.write(response)
@@ -84,12 +100,6 @@ def main():
             plt.axis("off")
             plt.show()
             st.pyplot()
-
-        
-                
-
-    
-
 
 def get_response_text(generate_content_response):
     # Making sure candidates are available

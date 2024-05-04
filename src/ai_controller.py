@@ -2,6 +2,7 @@ from models.bert_model import EmotionBERTPredictor
 from services.emotion_service import EmotionAnalysisService
 from models.logistic_model import EmotionLogisticPredictor
 from services.gemini_service import ChatService
+from services.gru_service import GruModelService
 
 
 class EmotionController:
@@ -12,7 +13,9 @@ class EmotionController:
         self.service = None
         self.model_options = {
             0: EmotionLogisticPredictor(),
-            1: EmotionBERTPredictor()
+            1: EmotionBERTPredictor(),
+            2: GruModelService()
+            
         }
         self.gemini_service = ChatService()
 
@@ -23,8 +26,11 @@ class EmotionController:
         """
         if chosen_model == 0:
             self.service = EmotionAnalysisService(EmotionLogisticPredictor())
-        else:
+        elif chosen_model == 1:
             self.service = EmotionAnalysisService(EmotionBERTPredictor())
+        elif chosen_model == 2:
+            self.service = GruModelService()
+            return self.service.analyze_text(text)
         
         prediction_label, description_label, percentage = self.service.analyze_text(text)
 
@@ -35,4 +41,8 @@ class EmotionController:
         parameter += f" {message}"
         response = chat.send_message(parameter)
         return response.text
+    
 
+    def restartChat(self):
+        self.gemini_service = ChatService()
+        return "Chat restarted. How can I help you today?"
