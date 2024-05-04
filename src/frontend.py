@@ -1,5 +1,6 @@
 import streamlit as st
-
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 from ai_controller import EmotionController
 from utils import text_preprocessor
 from models import logistic_model
@@ -74,6 +75,16 @@ def main():
             df['emotion'] = probs
             df = df.loc[:,["text","emotion"]]
             st.dataframe(df,use_container_width=True,height=5)
+            st.write('Wordcloud derived from your text')
+            # Create and generate a word cloud image:
+            wordcloud = WordCloud(background_color='white',height=600,width=800).generate(text)
+            st.set_option('deprecation.showPyplotGlobalUse', False)
+            # Display the generated image:
+            plt.imshow(wordcloud, interpolation='nearest')
+            plt.axis("off")
+            plt.show()
+            st.pyplot()
+
         
                 
 
