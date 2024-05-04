@@ -41,12 +41,11 @@ class EmotionAnalysisService:
             input_language (str): Original language of input text. Defaults to 'en'.
         """
 
-        # Language detection and optional translation
-        translated = self.text_handler.detect_language(text)
+        # Language detection and optional translation (Only in Spanish and no works :P
+        # translated = self.text_handler.detect_language(text)
 
         is_logistic = isinstance(self.emotion_predictor, EmotionLogisticPredictor)
-        processed_text = self.text_processor.preprocess_text(translated, is_logistic)
-        
+        processed_text = self.text_processor.preprocess_text(text, is_logistic)
         # Prediction
         prediction, percentage = self.emotion_predictor.predict_emotion(processed_text)
         # Mapping label and description
