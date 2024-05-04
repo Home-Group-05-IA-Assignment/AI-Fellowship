@@ -21,7 +21,7 @@ def main():
     emotion = ""
     parameter = "Take on the role of a counselor to provide reading recommendations (do not share links) and techniques for controlling emotions, especially inviting the person to engage in offline activities, as well as giving advice and listening to the user. Based on the following text, what recommendations would you make: "
 
-    tab1, tab2 = st.tabs(["Explore Your Emotions", "Need Help?","Explore your text"])
+    tab1, tab2,tab3 = st.tabs(["Explore Your Emotions", "Need Help?","Explore your text"])
     prediction_label, description_label, percentage = "", "", ""
     with tab1:
         st.header("We'll tell you what emotion you're feeling based on your text")
