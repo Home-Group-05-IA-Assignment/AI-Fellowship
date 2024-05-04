@@ -15,7 +15,6 @@ model_options = {
     "Bidirectional Encoder Representations from Transformers-BERT": 1
 }
 
-
 def main():
     global firstIn
     global send_button_disabled
@@ -37,7 +36,7 @@ def main():
 
                 try:
                     prediction_label, description_label, percentage = controller.run_analysis(model_options[model_choice], text)
-                    f"The emotion you're feeling is: {prediction_label}, the probability: {percentage:.2%}, {description_label}. If you want to delve a little deeper, go to the second tab.")
+                    st.write(f"The emotion you're feeling is: {prediction_label}, the probability: {percentage:.2%}, {description_label}. If you want to delve a little deeper, go to the second tab.")
                 except:
                     st.write(f"We had problems reading your text. Please write something longer or try with another model.")
             else:
@@ -59,6 +58,12 @@ def main():
             firstIn = False
             response = controller.gemini_controller(parameter, emotion)
             st.write(response)
+    with tab3:
+        st.warning("🤓 We use Gemini API to analyze your text. However its response may not be 100% accurate or perfect. Please be careful about the recommendations of the generated text")
+        if text == "":
+            st.write('We need some text to analyze, please write something in "explore your emotions" and come back here.')
+        else:
+            st.write('it is nice to meet you')
     
 
 

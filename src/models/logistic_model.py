@@ -86,6 +86,6 @@ class EmotionLogisticPredictor(IEmotionPredictor):
         #return the index and the max probability
         predicted_class_id = df.avg_prob.idxmax()
         predicted_probability = df.iloc[predicted_class_id].avg_prob
-        
+        print('Retrieving from Logistic Regression')
 
         return predicted_class_id, predicted_probability

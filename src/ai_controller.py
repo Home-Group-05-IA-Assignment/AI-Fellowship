@@ -25,7 +25,7 @@ class EmotionController:
             self.service = EmotionAnalysisService(EmotionLogisticPredictor())
         else:
             self.service = EmotionAnalysisService(EmotionBERTPredictor())
-        print(self.service)
+        
         prediction_label, description_label, percentage = self.service.analyze_text(text)
 
         return prediction_label, description_label, percentage
