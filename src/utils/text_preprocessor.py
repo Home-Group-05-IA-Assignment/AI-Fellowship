@@ -11,9 +11,6 @@ from nltk.corpus import wordnet
 from spacy.lang.en.stop_words import STOP_WORDS
 from wordcloud import STOPWORDS
 
-nltk.download('punkt')
-nltk.download('wordnet')
-
 
 class TextPreprocessor:
     """
@@ -76,10 +73,11 @@ class TextPreprocessor:
     Tokenizes and cleans the Dataframe from readFromStr (used for logistic model)
     """
     def tokenizeDF(self,dataframe):
+        
     #drop NaN values
         dataframe = dataframe.dropna(subset=["text"])
     # lowercase, digits and extra-spaces
-        dataframe["t_text"] = dataframe["text"].str.lower()
+        dataframe["t_text"] = dataframe["text"].astype(str).str.lower()
         dataframe["t_text"] = dataframe["t_text"].apply(lambda x: re.sub(r"\d+","",x))
         dataframe["t_text"] = dataframe["t_text"].apply(lambda x: re.sub(r"\s+"," ",x))
 
@@ -119,17 +117,8 @@ class TextPreprocessor:
             :param text:
             :param is_logistic:
         """
-        # Initial preprocessing step to expand chat abbreviations
-        text = self.replace_chat_words(text)
-
-        # Converting to lowercase, removing extra spaces, symbols, and converting emojis
-        text = text.lower()
-        text = re.sub(r'\s+', ' ', text)
-        text = re.sub(r'[^\w\s]', '', text)
-        text = emoji.demojize(text)
-
-        # Removing stop words and stemming the remainders
         if is_logistic:
+            
             #tokens = word_tokenize(text)
             #filtered_tokens = [word for word in tokens if word not in self.stop_words]
             #text = [self.lemmatizer.lemmatize(word) for word in filtered_tokens]
@@ -137,6 +126,16 @@ class TextPreprocessor:
             """Text now is a Dataframe"""
             text = self.tokenizeDF(text)
         else:
+            # Initial preprocessing step to expand chat abbreviations
+            text = self.replace_chat_words(text)
+
+            # Converting to lowercase, removing extra spaces, symbols, and converting emojis
+            text = text.lower()
+            text = re.sub(r'\s+', ' ', text)
+            text = re.sub(r'[^\w\s]', '', text)
+            text = emoji.demojize(text)
+
+            # Removing stop words and stemming the remainders
             text = " ".join([self.ps.stem(word) for word in text.split() if word not in self.stop_words])
         return text
 

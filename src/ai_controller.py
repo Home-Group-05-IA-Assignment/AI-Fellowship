@@ -17,17 +17,15 @@ class EmotionController:
         self.gemini_service = ChatService()
 
     def run_analysis(self, chosen_model, text):
+        
         """
         Conducts emotion analysis on text provided by the user, utilizing the selected predictive model.
         """
-
         if chosen_model == 0:
-
             self.service = EmotionAnalysisService(EmotionLogisticPredictor())
         else:
-
             self.service = EmotionAnalysisService(EmotionBERTPredictor())
-
+        print(self.service)
         prediction_label, description_label, percentage = self.service.analyze_text(text)
 
         return prediction_label, description_label, percentage

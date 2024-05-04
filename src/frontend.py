@@ -15,13 +15,16 @@ model_options = {
     "Bidirectional Encoder Representations from Transformers-BERT": 1
 }
 
+
 def main():
     global firstIn
     global send_button_disabled
     emotion = ""
+
     parameter = "Take on the role of a counselor to provide reading recommendations (do not share links) and techniques for controlling emotions, especially inviting the person to engage in offline activities, as well as giving advice and listening to the user. Based on the following text, what recommendations would you make: "
 
-    tab1, tab2 = st.tabs(["Explore Your Emotions", "Need Help?"])
+    tab1, tab2,tab3 = st.tabs(["Explore Your Emotions", "Need Help?","Explore your text"])
+
     prediction_label, description_label, percentage = "", "", ""
     with tab1:
         st.header("We'll tell you what emotion you're feeling based on your text")
@@ -31,9 +34,12 @@ def main():
         #
         if st.button("Identify emotion"):
             if text.strip():
-                prediction_label, description_label, percentage = controller.run_analysis(model_choice, text)
-                st.write(
+
+                try:
+                    prediction_label, description_label, percentage = controller.run_analysis(model_options[model_choice], text)
                     f"The emotion you're feeling is: {prediction_label}, the probability: {percentage:.2%}, {description_label}. If you want to delve a little deeper, go to the second tab.")
+                except:
+                    st.write(f"We had problems reading your text. Please write something longer or try with another model.")
             else:
                 st.write("Please enter some text to analyze.")
 
@@ -53,6 +59,7 @@ def main():
             firstIn = False
             response = controller.gemini_controller(parameter, emotion)
             st.write(response)
+    
 
 
 def get_response_text(generate_content_response):
