@@ -57,6 +57,12 @@ def main():
             firstIn = False
             response = controller.gemini_controller(parameter, emotion)
             st.write(response)
+    with tab3:
+        st.warning("🤓 We use Gemini API to analyze your text. However its response may not be 100% accurate or perfect. Please be careful about the recommendations of the generated text")
+        if text == "":
+            st.write('We need some text to analyze, please write something in "explore your emotions" and come back here.')
+        else:
+            st.write('it is nice to meet you')
     
 
 
