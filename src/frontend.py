@@ -36,7 +36,7 @@ def main():
 
                 try:
                     prediction_label, description_label, percentage = controller.run_analysis(model_options[model_choice], text)
-                    f"The emotion you're feeling is: {prediction_label}, the probability: {percentage:.2%}, {description_label}. If you want to delve a little deeper, go to the second tab.")
+                    st.write(f"The emotion you're feeling is: {prediction_label}, the probability: {percentage:.2%}, {description_label}. If you want to delve a little deeper, go to the second tab.")
                 except:
                     st.write(f"We had problems reading your text. Please write something longer or try with another model.")
             else:

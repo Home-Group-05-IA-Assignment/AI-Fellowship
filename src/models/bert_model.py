@@ -72,6 +72,6 @@ class EmotionBERTPredictor(IEmotionPredictor):
         # Extract and return the predicted class ID and its probability.
         predicted_class_id = probabilities.argmax(dim=1).item()
         predicted_probability = probabilities.max(dim=1).values.item()
-        print('estoy obteniendo de bert')
+        print('Retrieving from BERT')
 
         return predicted_class_id, predicted_probability
