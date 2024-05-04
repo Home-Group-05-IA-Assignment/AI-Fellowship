@@ -51,6 +51,24 @@ class TextPreprocessor:
         self.stop_words = set(stopwords.words('english'))
         self.ps = PorterStemmer()
         self.lemmatizer = WordNetLemmatizer()
+    
+    def convertDF_getProbs(self,s):
+        df_result = pd.DataFrame(columns=('text', 't_text'))
+        text = []
+        subtext = ""
+        #Separate into substrings when it finds a , or . or \n
+        #then add it to the df
+        for word in s:
+            if word != "," and word != "." and word != "\n":    
+                subtext+=word
+            else:
+                text.append(subtext)
+                subtext = "" 
+        df_result['text'] = text
+        df_result = self.tokenizeDF(df_result)
+        
+        #run logistic model and return probabilities
+        return df_result
 
     """
     Enables reading from strings and returns a dataframe with the data (used for logistic model)

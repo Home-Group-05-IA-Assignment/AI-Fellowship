@@ -1,6 +1,8 @@
 import streamlit as st
 
 from ai_controller import EmotionController
+from utils import text_preprocessor
+from models import logistic_model
 
 controller = EmotionController()
 st.session_state['send_button_disabled'] = True
@@ -63,7 +65,18 @@ def main():
         if text == "":
             st.write('We need some text to analyze, please write something in "explore your emotions" and come back here.')
         else:
-            st.write('it is nice to meet you')
+            st.write('This is the information you provided to us. Please expand the container in the rigth down corner')
+            processor = text_preprocessor.TextPreprocessor()
+            df = processor.convertDF_getProbs(s=text)
+            #add the emotions to the dataframe
+            model = logistic_model.EmotionLogisticPredictor()
+            probs = model.getEmotionsArrays(dataframe=df,modelName=model.emotions_model)
+            df['emotion'] = probs
+            df = df.loc[:,["text","emotion"]]
+            st.dataframe(df,use_container_width=True,height=5)
+        
+                
+
     
 
 
