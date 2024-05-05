@@ -4,6 +4,11 @@ from models.logistic_model import EmotionLogisticPredictor
 from services.gemini_service import ChatService
 from services.gru_service import GruModelService
 
+import nltk
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+
 
 class EmotionController:
     def __init__(self):
