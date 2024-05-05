@@ -6,8 +6,8 @@ class EmotionGruPredictor():
 
     def __init__(self):
         """Load pretrained models."""
-        self.model = load_model('./models/model-repository/gru-model/modelo_gru.h5')
-        self.tokenizer = joblib.load('./models/model-repository/gru-model/tokenizer.joblib')
+        self.model = load_model('./src/models/model-repository/gru-model/modelo_gru.h5')
+        self.tokenizer = joblib.load('./src/models/model-repository/gru-model/tokenizer.joblib')
         self.emotion_classification = {0:'Sadness',1:'Joy',2:'Love',3:'Anger',4:'Fear',5:'Surprise'}
 
     def analyze_text(self, text):
