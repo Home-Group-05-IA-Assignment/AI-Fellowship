@@ -1,15 +1,24 @@
 # AI-Fellowship: Emotion and Stress Recognition Application
 ## Description
 
-IA-Fellowship is an innovative application designed to accurately recognize emotions and stress levels embedded within textual data. By harnessing cutting-edge natural language processing (NLP) and machine learning techniques, it facilitates the identification and analysis of various human emotional states conveyed through text.
+IA-Fellowship is an application designed to accurately recognize emotions and stress levels embedded within textual data. By harnessing cutting-edge natural language processing (NLP) and machine learning techniques, it facilitates the identification and analysis of various human emotional states conveyed through text.
 ## Environment Setup
 
-The first model (BERT), was trained in this [GoogleColab](https://colab.research.google.com/drive/1JS5HWG9Pld47A9MGu0onvGb0SsHpfM1O?usp=sharing&authuser=1#scrollTo=KYkqxFLPSc-u), and then was also uploaded to this [HuggingFace](https://huggingface.co/Valwolfor/distilbert_emotions_fellowship/)
+The all models was trained with Notebook in Google Colab with T4. The Notebook there are in the repository. 
 
-The second model (Logistic Regression) was also trained in a Jupyter Notebook called EmotionsModel. You can find its .pkl in the ./clean-data folder.
+The first model **BERT** (Bidirectional Encoder Representations from Transformers) is a transformer-based machine learning technique for natural language processing (NLP) pre-training. Developed by Google, BERT captures the context of words in a sentence in all directions (bidirectionally),This model is pre-trained on a large corpus of text and then fine-tuned for specific tasks like question answering, sentiment analysis, and language understanding. Then was also uploaded to this [HuggingFace](https://huggingface.co/Valwolfor/distilbert_emotions_fellowship/). This model return the class of the emotion and the probability. We used *Distil Bert* with a lost of .02, trained in three epoch. 
 
-To ensure a consistent and isolated development environment for this project, ia-venv (a Python virtual environment) is utilized. Follow these steps to set up your environment:
+The second model **Logistic Regression** tailored for recognizing various human emotions from textual data. The process encompasses data preparation, model training, and serialization to enable easy future use without the need to retrain.
 
+The third model The Bidirectional Gated Recurrent Unit (Bi-GRU) is an advanced neural network used primarily in the field of natural language processing (NLP). Combining the strengths of Gated Recurrent Units (GRUs) with a bidirectional approach, Bi-GRU models can capture contextual information from both past and future states within a sequence, making them exceptionally powerful for understanding and processing sequential data, such as text.
+
+**Key Features**
+
+Bidirectionality: Unlike traditional GRU models that process data in a single direction, Bi-GRUs analyze data in both forward and backward directions. This allows the model to have a more comprehensive understanding of the input sequence.
+
+GRU Cells: Incorporates GRU cells to efficiently manage information flow, aiding the model in solving vanishing gradient problems and making it capable of handling long-range dependencies within text.
+
+To ensure a consistent and isolated development environment for this project (a Python virtual environment) is utilized. Follow these steps to set up your environment:  
 
 ```
 #Install virtualenv if you haven't
@@ -26,9 +35,7 @@ source ia-venv/bin/activate
 
 # Install the required dependencies
 pip install -r requirements.txt
-pip install -r requirementsLog.txt
 ```
-
 
 ## Data Preparation
 
@@ -46,30 +53,28 @@ The initial stage of the project involves rigorous data cleaning and preprocessi
 ## Key Files and Directories
 
 - **abbreviations.json**: This JSON file contains mappings from common English abbreviations to their expanded forms, used in text preprocessing to enhance clarity.
-- **hg-05-ia.ipynb**: A Jupyter notebook that outlines the data cleaning process, available for review on Google Colab.
+- **\*.ipynb**: A Jupyter notebook that outlines the data cleaning process, available for review on Google Colab.
 - **text.csv**: Raw  dataset before cleaning.
-- **EmotionsModel.ipynb**: A Jupyter notebook that outlines the preprocessing of the data and the training of the LogisticModel
-- **LogisticRegModel.pkl**: the model trained and ready to be used by the final user
-- You could use the *cleaned_data* when you are training the model. 
-## The API
-
-The core of this application is exposed through a Flask-based API, which serves endpoints for emotion prediction. To utilize the API:
-
-- Ensure the application is running locally at: http://127.0.0.1:5000.
-- Make POST requests to /predict with a JSON payload containing the text to be analyzed, e.g.,
-`
-{
-  "text": "Feeling great after a long walk."
-}
-`
-
-
-Analyzed emotions and their descriptions are returned in JSON format.
+- **Models files**: the model trained and ready to be used by the final user. 
 
 ## Project Structure Overview
 
-The EmotionPredictor class handles the prediction logic using two models: a pre-trained BERT model and a logistic regression model. The BERT model focuses on emotion classification, while the logistic regression model returns the probabilities of each emotion in a given text. TextHandler is responsible for language detection, translation (placeholder), and providing human-readable descriptions of the predicted emotions. TextPreprocessor performs initial text cleaning, including expanding abbreviations, removing stopwords, and stemming.
+Complementing the EmotionPredictor is the TextHandler, responsible for preliminary language processing tasks such as detecting the language of the input text and facilitating its translation (currently a placeholder for future development). It further enriches the output by attaching human-readable descriptions to the predicted emotions, enhancing interpretability for end users.
 
-### Final Notes
+Meanwhile, the TextPreprocessor plays a critical role in refining the input data. By expanding abbreviations, excising stopwords, and applying stemming techniques, it ensures the text is in an optimal form for analysis, improving the accuracy of emotion detection.
 
+From an architectural standpoint, our project adopts a modular approach, utilizing an IEmotionPredictor interface with an abstract method to seamlessly integrate the emotion prediction models into our service. This design pattern not only enhances the maintainability of the codebase but also simplifies the integration of additional models in the future.
+
+On the frontend, we use Streamlit to craft an interactive and user-friendly interface, organized into three main tabs:
+
+**Emotion Analysis Tab**: Allows the user to input text, which is then processed to display a DataFrame showcasing the percentage representation of detected emotions, leveraging the GRU model for this purpose and one class with its probability for the others models.
+
+**Gemmini Conversation Tab**: Takes the output from the first tab to facilitate a conversation with the Gemini App. This innovative feature aims to simulate a responsive interaction based on the emotional cues gleaned from the user's input.
+
+**Text Analysis Tab**: Focuses on a deeper textual analysis using the Logistic Regression model. The output, alongside a Word Cloud visualization, offers the user a comprehensive view of the thematic and emotional elements present in their input.
+
+This streamlined process, from robust backend logic to a dynamic and engaging frontend, exemplifies our commitment to delivering a holistic tool for emotion and sentiment analysis. By bridging cutting-edge AI models with intuitive interface design, we aim to provide users with valuable insights into the emotional undertones of textual data.
+
+### Final Notes                                                                               
+                                                                                              
 This application, part of the broader IA-Fellowship initiative, aims to push the boundaries of emotion and stress analysis using AI. Ongoing development and improvements are focused on enhancing accuracy, expanding language support, and refining the models for better real-world applicability. Having both models, BERT and logistic regression, offers complementary benefits: while BERT excels at capturing complex linguistic patterns, logistic regression provides interpretable probability scores for each emotion, enhancing the overall robustness and interpretability of the emotion classification system.
