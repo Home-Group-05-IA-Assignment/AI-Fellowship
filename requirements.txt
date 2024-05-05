@@ -9,7 +9,6 @@ asttokens==2.4.1
 astunparse==1.6.3
 async-lru==2.0.4
 attrs==23.2.0
-awsebcli==3.20.10
 Babel==2.14.0
 beautifulsoup4==4.12.3
 bleach==6.1.0
@@ -22,7 +21,6 @@ cement==2.8.2
 certifi==2024.2.2
 cffi==1.16.0
 charset-normalizer==3.3.2
-click==8.1.7
 cloudpathlib==0.16.0
 comm==0.2.2
 confection==0.1.4
@@ -64,7 +62,6 @@ huggingface-hub==0.22.2
 idna==3.7
 intel-openmp==2021.4.0
 ipykernel==6.29.4
-ipython==8.23.0
 isoduration==20.11.0
 itsdangerous==2.2.0
 jedi==0.19.1
@@ -75,15 +72,6 @@ json5==0.9.25
 jsonpointer==2.4
 jsonschema==4.21.1
 jsonschema-specifications==2023.12.1
-jupyter-events==0.10.0
-jupyter-lsp==2.2.5
-jupyter_client==8.6.1
-jupyter_core==5.7.2
-jupyter_server==2.14.0
-jupyter_server_terminals==0.5.3
-jupyterlab==4.1.6
-jupyterlab_pygments==0.3.0
-jupyterlab_server==2.26.0
 keras==2.15.0
 kiwisolver==1.4.5
 langcodes==3.4.0
@@ -180,7 +168,6 @@ tensorboard-data-server==0.7.2
 tensorflow==2.15.0
 tensorflow-estimator==2.15.0
 tensorflow-io-gcs-filesystem==0.31.0
-termcolor==2.4.0
 terminado==0.18.1
 thinc==8.2.3
 threadpoolctl==3.4.0
@@ -190,7 +177,6 @@ toml==0.10.2
 toolz==0.12.1
 torch==2.3.0
 tornado==6.4
-tqdm==4.66.2
 traitlets==5.14.3
 transformers==4.40.1
 typer==0.9.4
@@ -200,10 +186,7 @@ tzdata==2024.1
 update==0.0.1
 uri-template==1.3.0
 uritemplate==4.1.1
-urllib3==2.2.1
-wasabi==1.1.2
 watchdog==4.0.0
-wcwidth==0.2.13
 weasel==0.3.4
 webcolors==1.13
 webencodings==0.5.1
