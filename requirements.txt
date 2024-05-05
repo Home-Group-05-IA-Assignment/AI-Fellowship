@@ -42,14 +42,6 @@ fsspec==2024.3.1
 gast==0.5.4
 gitdb==4.0.11
 GitPython==3.1.43
-google-ai-generativelanguage==0.6.2
-google-api-core==2.19.0
-google-api-python-client==2.127.0
-google-auth==2.29.0
-google-auth-httplib2==0.2.0
-google-generativeai==0.5.2
-google-pasta==0.2.0
-googleapis-common-protos==1.63.0
 grpcio==1.63.0
 grpcio-status==1.62.2
 h11==0.14.0
@@ -172,7 +164,7 @@ tbb==2021.12.0
 tenacity==8.2.3
 tensorboard==2.16.2
 tensorboard-data-server==0.7.2
-tensorflow==2.16.1
+tensorflow==2.15.0
 tensorflow-intel==2.16.1
 termcolor==2.4.0
 terminado==0.18.1
