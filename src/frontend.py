@@ -20,6 +20,12 @@ model_options = {
     "GRU": 2,
 }
 
+model_information = {
+    "Logistic Regression": "Simplicity, efficiency, handling of categorical variables, classification probabilities, robustness. Disadvantage: Limited interpretability in complex cases.",
+    "Bidirectional Encoder Representations from Transformers-BERT": "Powerful Contextual Understanding: BERT excels at capturing complex relationships between words in a sentence, leading to highly accurate classifications based on context. However has a high computational complexity.",
+    "GRU": "GRU models offer more interpretability, allowing you to better understand what features contribute to classification decisions. However has a limited contextual awareness"
+}
+
 def main():
     global firstIn
     global send_button_disabled
@@ -32,10 +38,13 @@ def main():
     prediction_label, description_label, percentage = "", "", ""
     with tab1:
         st.header("We'll tell you what emotion you're feeling based on your text")
-        model_choice = st.selectbox("Select the model you want to work with: ", list(model_options.keys()))
+        model_choice = st.selectbox("Select the model you want to work with: ", list(model_options.keys()),help="Hover for more information")
+        if model_choice:
+            #Show the model description
+            st.warning(f" 🤓{model_information[model_choice]}")
         text = st.text_area("Enter your text here")
-
-        #
+        #Add the extra information for the user
+        
         if st.button("Identify emotion"):
             if text.strip():
                 print(f'model choice is {model_choice}')
