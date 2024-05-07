@@ -20,6 +20,12 @@ model_options = {
     "GRU": 2,
 }
 
+model_information = {
+    "Logistic Regression": "Simplicity, efficiency, handling of categorical variables, classification probabilities, robustness. Disadvantage: Limited interpretability in complex cases.",
+    "Bidirectional Encoder Representations from Transformers-BERT": "Powerful Contextual Understanding: BERT excels at capturing complex relationships between words in a sentence, leading to highly accurate classifications based on context. However has a high computational complexity.",
+    "GRU": "GRU models offer more interpretability, allowing you to better understand what features contribute to classification decisions. However has a limited contextual awareness"
+}
+
 def main():
     global firstIn
     global send_button_disabled
@@ -32,16 +38,21 @@ def main():
     prediction_label, description_label, percentage = "", "", ""
     with tab1:
         st.header("We'll tell you what emotion you're feeling based on your text")
-        model_choice = st.selectbox("Select the model you want to work with: ", list(model_options.keys()))
+        model_choice = st.selectbox("Select the model you want to work with: ", list(model_options.keys()),help="Hover for more information")
+        if model_choice:
+            #Show the model description
+            st.warning(f" 🤓{model_information[model_choice]}")
         text = st.text_area("Enter your text here")
-
-        #
+        #Add the extra information for the user
+        
         if st.button("Identify emotion"):
             if text.strip():
-
+                print(f'model choice is {model_choice}')
                 try:
                     if model_choice == "GRU":
+                       
                         res = controller.run_analysis(model_options[model_choice], text)
+                        
                         prediction_label = max(res, key=res.get)
                         percentage = res[prediction_label]/100
 
@@ -78,12 +89,11 @@ def main():
             response = controller.gemini_controller(parameter, emotion)
             st.write(response)
     with tab3:
-        st.warning("🤓 We use Gemini API to analyze your text. However its response may not be 100% accurate or perfect. Please be careful about the recommendations of the generated text")
+        st.warning("🤓 We use Logistic Regression to analyze your text. However its response may not be 100% accurate or perfect. ")
         if text == "":
             st.write('We need some text to analyze, please write something in "explore your emotions" and come back here.')
         else:
             try:
-                st.write('This is the information you provided to us. Please expand the container in the rigth down corner')
                 processor = text_preprocessor.TextPreprocessor()
                 df = processor.convertDF_getProbs(s=text)
                 #add the emotions to the dataframe
@@ -91,19 +101,22 @@ def main():
                 probs = model.getEmotionsArrays(dataframe=df,modelName=model.emotions_model)
                 df['emotion'] = probs
                 df = df.loc[:,["text","emotion"]]
+                st.write('This is the information you provided to us. Please expand the container in the rigth down corner')
                 st.dataframe(df,use_container_width=True,height=5)
-                st.write('Wordcloud derived from your text')
-                # Create and generate a word cloud image:
-                wordcloud = WordCloud(background_color='white',height=600,width=800).generate(text)
-                st.set_option('deprecation.showPyplotGlobalUse', False)
-                # Display the generated image:
-                plt.imshow(wordcloud, interpolation='nearest')
-                plt.axis("off")
-                plt.show()
-                st.pyplot()
             except Exception as e:
                 print(e)
                 st.write("We had problems reading your text. Please write something longer")
+            st.write('Wordcloud derived from your text')
+            # Create and generate a word cloud image:
+            wordcloud = WordCloud(background_color='white', height=600, width=800).generate(text)
+            #supress warning
+            fig, ax = plt.subplots()
+            ax.imshow(wordcloud, interpolation='nearest')
+            ax.axis("off")
+            # Hide any extra axes or labels from matplotlib
+            plt.tight_layout()
+            # Display the word cloud image in Streamlit
+            st.pyplot(fig)
 
 def get_response_text(generate_content_response):
     # Making sure candidates are available

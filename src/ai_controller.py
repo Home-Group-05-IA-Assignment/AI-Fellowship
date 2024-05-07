@@ -33,6 +33,7 @@ class EmotionController:
             self.service = EmotionAnalysisService(EmotionLogisticPredictor())
         elif chosen_model == 1:
             self.service = EmotionAnalysisService(EmotionBERTPredictor())
+            
         elif chosen_model == 2:
             self.service = GruModelService()
             return self.service.analyze_text(text)

@@ -32,9 +32,11 @@ class EmotionLogisticPredictor(IEmotionPredictor):
     def __init__(self):
         """Load pretrained models."""
         with open('./src/models/model-repository/logistic-reg-model/tfidf_vectorizer.pkl', 'rb') as f_tfidf:
+        #with open('./models/model-repository/logistic-reg-model/tfidf_vectorizer.pkl','rb') as f_tfidf:
             self.tfidf_vectorizer = pickle.load(f_tfidf)
 
         with open('./src/models/model-repository/logistic-reg-model/logisticRegModel.pkl', 'rb') as f_logreg:
+        #with open('./models/model-repository/logistic-reg-model/logisticRegModel.pkl','rb') as f_logreg:
             self.emotions_model = pickle.load(f_logreg)
 
     def getEmotionsArrays(self,modelName,dataframe):
