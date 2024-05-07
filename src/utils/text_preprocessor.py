@@ -168,7 +168,7 @@ class TextPreprocessor:
         Returns:../../ai-models/clean-data/abbreviations.json
             str: Text with chat abbreviations expanded.
         """
-        replacements_df = pd.read_json('./ai-models/clean-data/abbreviations.json', orient='index')
+        replacements_df = pd.read_json('./src/ai-models/clean-data/abbreviations.json', orient='index')
         replacements_df.index = replacements_df.index.str.upper()
         replacements = replacements_df[0].to_dict()
 

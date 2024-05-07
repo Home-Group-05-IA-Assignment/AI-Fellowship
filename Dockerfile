@@ -8,7 +8,7 @@ WORKDIR /home/circleci/project
 ENV GOOGLE_API_KEY=AIzaSyCAyZdZDa85vLQq-ZA-MNi5XWaBP0UW3AQ
 
 # Update pip to the latest version
-RUN python -m pip install --upgrade pip
+RUN pip install --upgrade pip
 
 # Copy the requirements.txt file into the container
 COPY . .

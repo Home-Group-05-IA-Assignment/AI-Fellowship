@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b63a4158-7399-45fe-922a-ea971eb61d1a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/text_preprocessor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/text_preprocessor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -123,7 +123,7 @@
       <workItem from="1714922676068" duration="8040000" />
       <workItem from="1715047994438" duration="2754000" />
       <workItem from="1715088907551" duration="2526000" />
-      <workItem from="1715119322433" duration="3780000" />
+      <workItem from="1715119322433" duration="4739000" />
     </task>
     <servers />
   </component>
