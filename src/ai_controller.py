@@ -5,10 +5,15 @@ from services.gemini_service import ChatService
 from services.gru_service import GruModelService
 
 import nltk
-nltk.download('punkt')
-nltk.download('wordnet')
-nltk.download('stopwords')
+#verify download
+if not nltk.data.is_installed('punkt'):
+    nltk.download('punkt')
 
+if not nltk.data.is_installed('wordnet'):
+    nltk.download('wordnet')
+
+if not nltk.data.is_installed('stopwords'):
+    nltk.download('stopwords')
 
 class EmotionController:
     def __init__(self):

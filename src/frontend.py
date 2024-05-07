@@ -38,10 +38,11 @@ def main():
         #
         if st.button("Identify emotion"):
             if text.strip():
-
+                print(f'model choice is {model_choice}')
                 try:
-                    if model_choice == "GRU":
+                    if model_choice == "GRU" or model_choice == "Logistic Regression":
                         res = controller.run_analysis(model_options[model_choice], text)
+                        print(f'reched here: {res}')
                         prediction_label = max(res, key=res.get)
                         percentage = res[prediction_label]/100
 
@@ -97,13 +98,15 @@ def main():
                 st.write("We had problems reading your text. Please write something longer")
             st.write('Wordcloud derived from your text')
             # Create and generate a word cloud image:
-            wordcloud = WordCloud(background_color='white',height=600,width=800).generate(text)
-            st.set_option('deprecation.showPyplotGlobalUse', False)
-            # Display the generated image:
-            plt.imshow(wordcloud, interpolation='nearest')
-            plt.axis("off")
-            plt.show()
-            st.pyplot()
+            wordcloud = WordCloud(background_color='white', height=600, width=800).generate(text)
+            #supress warning
+            fig, ax = plt.subplots()
+            ax.imshow(wordcloud, interpolation='nearest')
+            ax.axis("off")
+            # Hide any extra axes or labels from matplotlib
+            plt.tight_layout()
+            # Display the word cloud image in Streamlit
+            st.pyplot(fig)
 
 def get_response_text(generate_content_response):
     # Making sure candidates are available
