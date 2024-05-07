@@ -66,12 +66,12 @@ class EmotionLogisticPredictor(IEmotionPredictor):
         average_emotion_probabilities = {}
         for emotion, probabilities in emotion_probabilities.items():
             average_probability = sum(probabilities) / len(probabilities)
-            e = emotion#emotion_classification[emotion]
+            e =emotion_classification[emotion]
             average_emotion_probabilities[e] = round(average_probability,3)
 
-# Save results in a dataframe
+# Save results in a dict
         
-        result = pd.DataFrame.from_dict(average_emotion_probabilities, orient='index', columns=['avg_prob'])
+        result = average_emotion_probabilities#pd.DataFrame.from_dict(average_emotion_probabilities, orient='index', columns=['avg_prob'])
         return result
 
 
@@ -94,11 +94,11 @@ class EmotionLogisticPredictor(IEmotionPredictor):
 
         """We supose text is a dataframe which is returned from text_preprocessor"""
         
-        df = self.LogisticRegressionModel(text)
+        res = self.LogisticRegressionModel(text)
         
         #return the index and the max probability
-        predicted_class_id = df.avg_prob.idxmax()
-        predicted_probability = df.iloc[predicted_class_id].avg_prob
+        #predicted_class_id = df.avg_prob.idxmax()
+        #predicted_probability = df.iloc[predicted_class_id].avg_prob
         print('Retrieving from Logistic Regression')
-
-        return predicted_class_id, predicted_probability
+        #Return directly the dict
+        return res#predicted_class_id, predicted_probability
