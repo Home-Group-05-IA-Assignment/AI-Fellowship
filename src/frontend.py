@@ -40,9 +40,10 @@ def main():
             if text.strip():
                 print(f'model choice is {model_choice}')
                 try:
-                    if model_choice == "GRU" or model_choice == "Logistic Regression":
+                    if model_choice == "GRU":
+                       
                         res = controller.run_analysis(model_options[model_choice], text)
-                        print(f'reched here: {res}')
+                        
                         prediction_label = max(res, key=res.get)
                         percentage = res[prediction_label]/100
 
