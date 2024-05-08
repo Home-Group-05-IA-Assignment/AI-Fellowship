@@ -38,6 +38,23 @@ source ia-venv/bin/activate
 # Install the required dependencies
 pip install -r requirements.txt
 ```
+Dockerfile
+
+```
+#Build image from docker file in the dir where is the Dockerfile.
+docker build -t <id-image> .
+
+# Run the container
+ docker run -p 8000:8000 -dit <id-container>
+
+#You can execute commands into of container 
+docker exec -it <id-container> bash
+
+
+#Into the container
+streamlit run ./src/frontend.py --server.port 8000
+
+```
 
 ## Data Preparation
 
